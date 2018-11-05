@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_margin="10sp">
+
+    <TextView
+        android:id="@+id/text_add_quest_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="의뢰 등록"
+        android:textSize="30sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/text_add_title_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="제목" />
+
+    <EditText
+        android:id="@+id/textbox_add_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="의뢰 제목"
+        android:inputType="textPersonName" />
+
+    <TextView
+        android:id="@+id/text_add_area_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="위치" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/textbox_add_area"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="본인 위치"
+            android:inputType="textPersonName" />
+
+        <Button
+            android:id="@+id/button3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="GPS" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/text_add_reward_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="사례금" />
+
+    <EditText
+        android:id="@+id/textbox_add_reward"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="사례금 입력"
+        android:inputType="numberSigned" />
+
+    <TextView
+        android:id="@+id/text_add_context_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="의뢰 내용" />
+
+    <EditText
+        android:id="@+id/textbox_add_context"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:ems="10"
+        android:hint="의뢰의 상세 내용을 적어주세요."
+        android:gravity="top"
+        android:inputType="textMultiLine" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="bottom"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/button_add_submit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="등록"/>
+
+        <Button
+            android:id="@+id/button_add_exit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="취소"/>
+    </LinearLayout>
+</LinearLayout>
