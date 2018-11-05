@@ -16,13 +16,19 @@ public class QuestEntry extends LinearLayout {
     private long questIndex;
     private LayoutInflater inflater;
 
+    public final static int UPLOADED = 0, RESPONDED = 1, ACCEPTED = 2, COMPLETED = 3;
     private String requester, acceptor;
     private ArrayList<String> respondent;
     private String title, area, reward, comment;
+    private int state;
 
     public QuestEntry(Context context) {
         super(context);
         this.initEntry(context);
+    }
+
+    public void setQuestIndex(long index) {
+        this.questIndex = index;
     }
 
     public void setRequester(String requester) {
@@ -47,6 +53,14 @@ public class QuestEntry extends LinearLayout {
         ((TextView)this.findViewById(R.id.text_entry_reward)).setText(this.reward);
     }
 
+    public void setState(int state) {
+        this.state = state;
+    }
+
+    public int getState(){
+        return this.state;
+    }
+
     public String getRequester() {
         return this.requester;
     }
@@ -69,6 +83,7 @@ public class QuestEntry extends LinearLayout {
     }
 
     private void initEntry(Context context) {
+        this.state = 0;
         respondent = new ArrayList<String>();
         inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.quest_entry, this, true);

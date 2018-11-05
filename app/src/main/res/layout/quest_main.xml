@@ -25,7 +25,9 @@
         </LinearLayout>
     </ScrollView>
 
-    <include layout="@layout/slide_menu" />
+    <include
+        android:id="@+id/slide_menu"
+        layout="@layout/slide_menu" />
 
 </android.support.v4.widget.DrawerLayout>
 
