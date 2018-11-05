@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -103,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
                         questMainLayout.addView(tempEntry);
                     }
                 }
-
+                slideInit();
                break;
             case R.id.button_finished_trade:
                 questMainLayout.removeAllViewsInLayout();
@@ -116,6 +117,7 @@ public class MainActivity extends AppCompatActivity {
                         questMainLayout.addView(tempEntry);
                     }
                 }
+                slideInit();
                 break;
             case R.id.button_charge_send:
                 break;
@@ -127,10 +129,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void slideInit() {
-        LinearLayout slide = (LinearLayout)findViewById(R.id.slide_menu);
-        for (float i = 0; i >= -slide.getWidth(); i--) {
-            slide.setTranslationX(i);
-        }
+        ((DrawerLayout)findViewById(R.id.quest_drawer)).closeDrawer(((LinearLayout)findViewById(R.id.slide_menu)));
     }
 
 }
