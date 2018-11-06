@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -26,15 +28,18 @@ public class MainActivity extends AppCompatActivity {
     LinearLayout questMainLayout;
     ArrayList<QuestEntry> questList;
     int questCount = 3;
-    final static int ADD_QUEST = 1;
+    final static int USER_INFO_CHANGE = 0, ADD_QUEST = 1, VIEW_QUEST = 2;
     FloatingActionButton fab;
 
     long userID;
     String userNickName, profileImagePath;
 
     TextView profileNickName;
+    Bitmap bitmap = null;
     ImageView profileImage;
-    Button button_userinfomodify, button_continue_trade, button_finished_trade, button_charge_send, button_logout;
+
+    Button button_userinfomodify, button_continue_trade, button_finished_trade,
+            button_charge_send, button_logout, button_exit;
 
     public boolean loginCheck(Intent intent) {
         if (intent == null) {
@@ -49,19 +54,40 @@ public class MainActivity extends AppCompatActivity {
     public void setProfile() {
         profileNickName = (TextView)findViewById(R.id.text_userNickName);
         profileNickName.setText(this.userNickName);
-        profileImage = (ImageView)findViewById(R.id.image_profile);
+        profileImage = (ImageView) findViewById(R.id.image_profile);
+        this.setProfileImage();
+    }
+
+    public void setProfileImage() {
+        Thread thread = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    URL url = new URL(profileImagePath);
+                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                    connection.setDoInput(true);
+                    connection.connect();
+
+                    InputStream input = connection.getInputStream();
+                    bitmap = BitmapFactory.decodeStream(input);
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        thread.start();
         try {
-            URL url = new URL(this.profileImagePath);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setDoInput(true);
-            connection.connect();
-            InputStream input = connection.getInputStream();
-            Bitmap bitmap = BitmapFactory.decodeStream(input);
+            thread.join();
+            int imageWidth = bitmap.getWidth(), imageHeight = bitmap.getHeight();
+            int maxLength = Math.max(imageWidth, imageHeight), minLength = Math.min(imageWidth, imageHeight);
+            int startPosition = (maxLength - minLength) / 2;
+            bitmap = Bitmap.createBitmap(bitmap, imageWidth > imageHeight ? startPosition : 0,  imageHeight > imageWidth ? startPosition : 0, minLength, minLength);
             profileImage.setImageBitmap(bitmap);
-        } catch (IOException e) {
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        Toast.makeText(this, userNickName + ", " + profileImagePath, Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -84,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
         button_finished_trade = (Button)findViewById(R.id.button_finished_trade);
         button_charge_send = (Button)findViewById(R.id.button_charge_send);
         button_logout = (Button)findViewById(R.id.button_logout);
+        button_exit = (Button)findViewById(R.id.button_exit);
 
         questList = new ArrayList<QuestEntry>();
 
@@ -91,10 +118,12 @@ public class MainActivity extends AppCompatActivity {
             QuestEntry questEntry = new QuestEntry(getApplicationContext());
             questEntry.setQuestIndex(questList.size());
             questEntry.setRequester(this.userID);
+            questEntry.setQuestInfo(i + "번째 요청 : 아메리카노", "충남대 5호관 604호", "0"+"원", "테스트용");
             questList.add(questEntry);
         }
 
         for (int i = 0; i < questList.size(); i++) {                // 레이아웃에 엔트리를 뷰로 추가
+
             questMainLayout.addView(questList.get(i));
         }
 
@@ -110,8 +139,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
+            case USER_INFO_CHANGE:
+                break;
             case ADD_QUEST:
-                if (resultCode == Activity.RESULT_OK) {     // Intent로 받아온 정보로 엔트리 추가
+                if (resultCode == AddQuest.QUEST_ADDED) {     // Intent로 받아온 정보로 엔트리 추가
                     QuestEntry newQuestEntry = new QuestEntry(getApplicationContext());
                     newQuestEntry.setQuestIndex(questList.size());          // 거래번호
                     newQuestEntry.setRequester(this.userID);
@@ -123,7 +154,22 @@ public class MainActivity extends AppCompatActivity {
                     questMainLayout.addView(newQuestEntry, 0);
                 }
                 break;
+            case VIEW_QUEST:
+                break;
             default:
+        }
+    }
+
+    public void onClickedQuestEntry(View v) {
+        QuestEntry selectedEntry = new QuestEntry(getApplicationContext());
+        if (v.getId() == R.id.quest_main_layout) {
+            Toast.makeText(this, "entry clicked.", Toast.LENGTH_LONG).show();
+            /*  issue #3
+            Intent intent = new Intent(MainActivity.this, ViewQuest.class);
+            intent.putExtra("entry", selectedEntry);
+            intent.putExtra("viewerId", userID);
+            startActivityForResult(intent, VIEW_QUEST);
+            */
         }
     }
 
@@ -163,9 +209,16 @@ public class MainActivity extends AppCompatActivity {
                 setResult(LoginActivity.LOGOUT);
                 finish();
                 break;
+            case R.id.button_exit:
+                setResult(LoginActivity.EXIT);
+                finish();
+                break;
             default:
-                return;
         }
+    }
+
+    public long getUserID() {
+        return this.userID;
     }
 
     public void slideInit() {

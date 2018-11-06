@@ -70,19 +70,19 @@
         android:inputType="numberSigned" />
 
     <TextView
-        android:id="@+id/text_add_context_header"
+        android:id="@+id/text_add_comment_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="의뢰 내용" />
 
     <EditText
-        android:id="@+id/textbox_add_context"
+        android:id="@+id/textbox_add_comment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:ems="10"
-        android:hint="의뢰의 상세 내용을 적어주세요."
         android:gravity="top"
+        android:hint="의뢰의 상세 내용을 적어주세요."
         android:inputType="textMultiLine" />
 
     <LinearLayout

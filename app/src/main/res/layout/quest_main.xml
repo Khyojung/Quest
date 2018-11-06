@@ -3,26 +3,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginTop="10sp"
-    android:visibility="visible"
+    android:clickable="true"
     android:id="@+id/quest_drawer">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-
         <LinearLayout
+            android:id="@+id/quest_main_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:id="@+id/quest_main_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:orientation="vertical">
-            </LinearLayout>
-
+            android:gravity="center"
+            android:orientation="vertical"
+            android:clickable="true"
+            android:onClick="onClickedQuestEntry">
         </LinearLayout>
     </ScrollView>
 

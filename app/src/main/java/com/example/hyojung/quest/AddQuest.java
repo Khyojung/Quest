@@ -11,7 +11,8 @@ import android.widget.TextView;
 
 public class AddQuest extends AppCompatActivity {
 
-    EditText inputTitle, inputArea, inputReward, inputContext;
+    final static int QUEST_ADDED = 0;
+    EditText inputTitle, inputArea, inputReward, inputComment;
     Button submitButton, cancelButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,7 +22,7 @@ public class AddQuest extends AppCompatActivity {
         inputTitle = (EditText)findViewById(R.id.textbox_add_title);
         inputArea = (EditText)findViewById(R.id.textbox_add_area);
         inputReward = (EditText)findViewById(R.id.textbox_add_reward);
-        inputContext = (EditText)findViewById(R.id.textbox_add_context);
+        inputComment = (EditText)findViewById(R.id.textbox_add_comment);
         submitButton = (Button)findViewById(R.id.button_add_submit);
         cancelButton = (Button)findViewById(R.id.button_add_exit);
 
@@ -32,7 +33,7 @@ public class AddQuest extends AppCompatActivity {
                 intent.putExtra("Title", inputTitle.getText().toString());
                 intent.putExtra("Area", inputArea.getText().toString());
                 intent.putExtra("Reward", inputReward.getText().toString());
-                intent.putExtra("Comment", inputContext.getText().toString());
+                intent.putExtra("Comment", inputComment.getText().toString());
                 setResult(RESULT_OK, intent);
                 finish();
             }

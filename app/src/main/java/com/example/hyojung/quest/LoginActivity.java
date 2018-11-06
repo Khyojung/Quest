@@ -17,6 +17,7 @@ import com.kakao.auth.ISessionCallback;
 import com.kakao.auth.Session;
 import com.kakao.network.ErrorResult;
 import com.kakao.usermgmt.UserManagement;
+import com.kakao.usermgmt.callback.LogoutResponseCallback;
 import com.kakao.usermgmt.callback.MeResponseCallback;
 import com.kakao.usermgmt.response.model.UserProfile;
 import com.kakao.util.exception.KakaoException;
@@ -44,6 +45,7 @@ public class LoginActivity extends AppCompatActivity {
         Session.getCurrentSession().open(AuthType.KAKAO_LOGIN_ALL, LoginActivity.this);
     }
 
+    // 해시값 구하는 코드
     public void getHashKey() {
         try {
             PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_SIGNATURES);
@@ -106,11 +108,20 @@ public class LoginActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == LOGIN_SUCCESS) {
             if (resultCode == LOGOUT) {
-
+                this.logout();
             }
             else if (resultCode == EXIT) {
                 finish();
             }
         }
+    }
+
+    public void logout() {
+        UserManagement.requestLogout(new LogoutResponseCallback() {
+            @Override
+            public void onCompleteLogout() {
+
+            }
+        });
     }
 }

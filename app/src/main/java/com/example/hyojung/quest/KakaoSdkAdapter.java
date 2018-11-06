@@ -28,7 +28,6 @@ class KakaoSdkAdapter extends KakaoAdapter {
                 return false;
             }
 
-
             @Override
             public ApprovalType getApprovalType() {
                 return ApprovalType.INDIVIDUAL;

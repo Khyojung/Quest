@@ -1,20 +1,21 @@
 package com.example.hyojung.quest;
 
 import android.content.Context;
-import android.util.AttributeSet;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class QuestEntry extends LinearLayout {
+public class QuestEntry extends LinearLayout implements Serializable {
 
     private long questIndex;
     private LayoutInflater inflater;
+    final private QuestEntry instance = this;
 
     public final static int UPLOADED = 0, RESPONDED = 1, ACCEPTED = 2, COMPLETED = 3;
     private long requester, acceptor;
@@ -88,4 +89,6 @@ public class QuestEntry extends LinearLayout {
         inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.quest_entry, this, true);
     }
+
+
 }

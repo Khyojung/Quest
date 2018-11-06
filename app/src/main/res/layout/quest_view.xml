@@ -1,6 +1,121 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_margin="10sp">
 
-</android.support.constraint.ConstraintLayout>
+    <TextView
+        android:id="@+id/text_view_quest_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="의뢰 내용"
+        android:textSize="30sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/text_view_title_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="제목" />
+
+    <TextView
+        android:id="@+id/text_view_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/text_view_area_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="위치" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/text_view_area"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/button3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="GPS" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/text_view_reward_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="사례금" />
+
+    <TextView
+        android:id="@+id/text_view_reward"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/text_view_comment_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="의뢰 내용" />
+
+    <TextView
+        android:id="@+id/text_view_comment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="bottom"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/button_cancel_quest"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_weight="1"
+            android:text="거래 취소" />
+
+        <Button
+            android:id="@+id/button_cancel_request"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_weight="1"
+            android:text="요청 취소" />
+
+        <Button
+            android:id="@+id/button_respond"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_weight="1"
+            android:text="응답" />
+
+        <Button
+            android:id="@+id/button_cancel_respond"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_weight="1"
+            android:text="응답 취소" />
+
+        <Button
+            android:id="@+id/button_view_exit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_weight="1"
+            android:text="뒤로가기" />
+    </LinearLayout>
+</LinearLayout>
