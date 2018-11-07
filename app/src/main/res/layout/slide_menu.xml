@@ -97,6 +97,15 @@
                 android:textSize="20sp"
                 android:text="나가기" />
 
+            <Button
+                android:id="@+id/button_developer_test"
+                android:layout_width="match_parent"
+                android:layout_height="60sp"
+                android:background="@drawable/menubutton"
+                android:onClick="onClickedInMenu"
+                android:textSize="20sp"
+                android:text="개발자 테스트용" />
+
         </LinearLayout>
     </ScrollView>
 

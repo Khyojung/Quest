@@ -4,13 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:layout_margin="10sp">
+    android:layout_margin="30sp">
 
     <TextView
         android:id="@+id/text_add_quest_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="의뢰 등록"
+        android:text="퀘스트 등록"
         android:textSize="30sp"
         android:textStyle="bold" />
 

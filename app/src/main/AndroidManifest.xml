@@ -21,7 +21,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".MainActivity"
+        <activity
+            android:name=".MainActivity"
             android:label="MainActivity">
         </activity>
 
@@ -33,6 +34,21 @@
         <activity
             android:name=".ViewQuest"
             android:label="ViewQuest">
+        </activity>
+
+        <activity
+            android:name=".ModifyUserInfo"
+            android:label="ModifyUserInfo">
+        </activity>
+
+        <activity
+            android:name=".CheckKakaoPay"
+            android:label="CheckKakaoPay">
+        </activity>
+
+        <activity
+            android:name=".ChatRoom"
+            android:label="ChatRoom">
         </activity>
 
         <meta-data

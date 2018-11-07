@@ -8,7 +8,10 @@
     android:fitsSystemWindows="true"
     tools:context="com.example.hyojung.quest.MainActivity">
 
-    <include layout="@layout/quest_main" />
+    <include
+        layout="@layout/quest_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"

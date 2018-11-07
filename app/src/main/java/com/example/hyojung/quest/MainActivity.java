@@ -3,6 +3,7 @@ package com.example.hyojung.quest;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -28,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
     LinearLayout questMainLayout;
     ArrayList<QuestEntryView> questList;
     int questCount = 3;
-    final static int USER_INFO_CHANGE = 0, ADD_QUEST = 1, VIEW_QUEST = 2;
+    final static int MODIFY_USER_INFO = 0, ADD_QUEST = 1, VIEW_QUEST = 2, CHECK_KAKAO_PAY = 3, CHAT_TEST = 4;
     FloatingActionButton fab;
 
     long userID;
@@ -39,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
     ImageView profileImage;
 
     Button button_userinfomodify, button_continue_trade, button_finished_trade,
-            button_charge_send, button_logout, button_exit;
+            button_charge_send, button_logout, button_exit, button_developer_test;
 
     public boolean loginCheck(Intent intent) {
         if (intent == null) {
@@ -103,6 +104,13 @@ public class MainActivity extends AppCompatActivity {
             finish();
         }
 
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+
+            }
+        });
+
         questMainLayout = (LinearLayout) findViewById(R.id.quest_main_layout);
         fab = (FloatingActionButton)findViewById(R.id.fab);
 
@@ -113,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
         button_charge_send = (Button)findViewById(R.id.button_charge_send);
         button_logout = (Button)findViewById(R.id.button_logout);
         button_exit = (Button)findViewById(R.id.button_exit);
+        button_developer_test = (Button)findViewById(R.id.button_developer_test);
 
         questList = new ArrayList<QuestEntryView>();
 
@@ -144,7 +153,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
-            case USER_INFO_CHANGE:
+            case MODIFY_USER_INFO:
+                if (requestCode == ModifyUserInfo.DEFAULT) {
+                    break;
+                }
+                if ((requestCode & ModifyUserInfo.USE_SPARE_NICKNAME) == ModifyUserInfo.USE_SPARE_NICKNAME) {
+
+                }
+                if ((requestCode & ModifyUserInfo.USE_SPARE_PROFILE) == ModifyUserInfo.USE_SPARE_PROFILE) {
+
+                }
                 break;
             case ADD_QUEST:
                 if (resultCode == AddQuest.QUEST_ADDED) {     // Intent로 받아온 정보로 엔트리 추가
@@ -178,6 +196,16 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
                 break;
+            case CHECK_KAKAO_PAY:
+                if (resultCode == CheckKakaoPay.EXIT) {
+
+                }
+                break;
+            case CHAT_TEST:
+                if (requestCode == ChatRoom.EXIT) {
+
+                }
+                break;
             default:
         }
     }
@@ -199,6 +227,9 @@ public class MainActivity extends AppCompatActivity {
     public void onClickedInMenu(View v) {
         switch (v.getId()) {
             case R.id.button_userinfomodify:
+                Intent intent = new Intent (MainActivity.this, ModifyUserInfo.class);
+                startActivityForResult(intent, MODIFY_USER_INFO);
+                slideInit();
                 break;
             case R.id.button_continue_trade:
                 for (int i = 0; i < questList.size(); i++) {
@@ -231,6 +262,9 @@ public class MainActivity extends AppCompatActivity {
                 slideInit();
                 break;
             case R.id.button_charge_send:
+                Intent payIntent = new Intent (MainActivity.this, CheckKakaoPay.class);
+                startActivityForResult(payIntent, CHECK_KAKAO_PAY);
+                slideInit();
                 break;
             case R.id.button_logout:
                 setResult(LoginActivity.LOGOUT);
@@ -239,6 +273,13 @@ public class MainActivity extends AppCompatActivity {
             case R.id.button_exit:
                 setResult(LoginActivity.EXIT);
                 finish();
+                break;
+            case R.id.button_developer_test:
+                Intent chatIntent = new Intent (MainActivity.this, ChatRoom.class);
+                chatIntent.putExtra("myId", this.userID);
+                chatIntent.putExtra("otherId", (long)123123);
+                startActivityForResult(chatIntent, CHAT_TEST);
+                slideInit();
                 break;
             default:
         }
