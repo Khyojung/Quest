@@ -21,11 +21,6 @@ import com.kakao.usermgmt.callback.LogoutResponseCallback;
 import com.kakao.usermgmt.callback.MeResponseCallback;
 import com.kakao.usermgmt.response.model.UserProfile;
 import com.kakao.util.exception.KakaoException;
-
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.security.MessageDigest;
 
 public class LoginActivity extends AppCompatActivity {
@@ -100,7 +95,7 @@ public class LoginActivity extends AppCompatActivity {
 
         @Override
         public void onSessionOpenFailed(KakaoException exception) {
-            //Toast.makeText(instance, "로그인 실패", Toast.LENGTH_LONG).show();
+            Toast.makeText(instance, "로그인 실패", Toast.LENGTH_LONG).show();
         }
     }
 

@@ -1,32 +1,17 @@
 package com.example.hyojung.quest;
 
-import android.content.Context;
-import android.content.Intent;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class QuestEntry extends LinearLayout implements Serializable {
-
-    private long questIndex;
-    private LayoutInflater inflater;
-    final private QuestEntry instance = this;
+public class QuestEntry implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     public final static int UPLOADED = 0, RESPONDED = 1, ACCEPTED = 2, COMPLETED = 3;
+    private long questIndex;
     private long requester, acceptor;
-    private ArrayList<Long> respondent;
+    private ArrayList<Long> respondent = new ArrayList<Long>();
     private String title, area, reward, comment;
-    private int state;
-
-    public QuestEntry(Context context) {
-        super(context);
-        this.initEntry(context);
-    }
+    private int state = 0;
 
     public void setQuestIndex(long index) {
         this.questIndex = index;
@@ -41,38 +26,39 @@ public class QuestEntry extends LinearLayout implements Serializable {
     }
 
     public void setAcceptor(long acceptor) {
-        this.acceptor = acceptor;
-    }
+            this.acceptor = acceptor;
+        }
 
     public void setQuestInfo(String title, String area, String reward, String comment) {
         this.title = title;
         this.area = area;
         this.reward = reward;
         this.comment = comment;
-        ((TextView)this.findViewById(R.id.text_entry_title)).setText(this.title);
-        ((TextView)this.findViewById(R.id.text_entry_area)).setText(this.area);
-        ((TextView)this.findViewById(R.id.text_entry_reward)).setText(this.reward);
     }
 
     public void setState(int state) {
-        this.state = state;
-    }
+            this.state = state;
+        }
 
     public int getState(){
-        return this.state;
+            return this.state;
+        }
+
+    public long getQuestIndex() {
+        return this.questIndex;
     }
 
     public long getRequester() {
-        return this.requester;
-    }
+            return this.requester;
+        }
 
     public ArrayList<Long> getRespondent() {
-        return this.respondent;
-    }
+            return this.respondent;
+        }
 
     public long getAcceptor() {
-        return this.acceptor;
-    }
+            return this.acceptor;
+        }
 
     public ArrayList<String> getQuestInfo() {
         ArrayList<String> info = new ArrayList<String>();
@@ -83,12 +69,13 @@ public class QuestEntry extends LinearLayout implements Serializable {
         return info;
     }
 
-    private void initEntry(Context context) {
-        this.state = 0;
-        respondent = new ArrayList<Long>();
-        inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        inflater.inflate(R.layout.quest_entry, this, true);
+    @Override
+    public boolean equals(Object otherQuestEntry) {
+        if (!(otherQuestEntry instanceof QuestEntry)) {
+            return false;
+        } else if (otherQuestEntry == null) {
+            return false;
+        }
+        return this.questIndex == ((QuestEntry)otherQuestEntry).getQuestIndex();
     }
-
-
 }

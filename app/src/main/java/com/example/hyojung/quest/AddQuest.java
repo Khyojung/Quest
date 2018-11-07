@@ -34,7 +34,7 @@ public class AddQuest extends AppCompatActivity {
                 intent.putExtra("Area", inputArea.getText().toString());
                 intent.putExtra("Reward", inputReward.getText().toString());
                 intent.putExtra("Comment", inputComment.getText().toString());
-                setResult(RESULT_OK, intent);
+                setResult(QUEST_ADDED, intent);
                 finish();
             }
         });

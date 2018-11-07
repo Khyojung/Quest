@@ -1,15 +1,15 @@
 package com.example.hyojung.quest;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -26,7 +26,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     LinearLayout questMainLayout;
-    ArrayList<QuestEntry> questList;
+    ArrayList<QuestEntryView> questList;
     int questCount = 3;
     final static int USER_INFO_CHANGE = 0, ADD_QUEST = 1, VIEW_QUEST = 2;
     FloatingActionButton fab;
@@ -45,10 +45,10 @@ public class MainActivity extends AppCompatActivity {
         if (intent == null) {
             return false;
         }
-        this.userID = intent.getLongExtra("kakaoID",0);
+        this.userID = intent.getLongExtra("kakaoID",-1);
         this.userNickName = intent.getStringExtra("kakaoNickName");
         this.profileImagePath = intent.getStringExtra("kakaoProfileImage");
-        return userID != 0;
+        return userID != -1;
     }
 
     public void setProfile() {
@@ -67,7 +67,6 @@ public class MainActivity extends AppCompatActivity {
                     HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                     connection.setDoInput(true);
                     connection.connect();
-
                     InputStream input = connection.getInputStream();
                     bitmap = BitmapFactory.decodeStream(input);
                 } catch (MalformedURLException e) {
@@ -83,7 +82,10 @@ public class MainActivity extends AppCompatActivity {
             int imageWidth = bitmap.getWidth(), imageHeight = bitmap.getHeight();
             int maxLength = Math.max(imageWidth, imageHeight), minLength = Math.min(imageWidth, imageHeight);
             int startPosition = (maxLength - minLength) / 2;
-            bitmap = Bitmap.createBitmap(bitmap, imageWidth > imageHeight ? startPosition : 0,  imageHeight > imageWidth ? startPosition : 0, minLength, minLength);
+            bitmap = Bitmap.createBitmap(bitmap,
+                    imageWidth > imageHeight ? startPosition : 0,
+                    imageHeight > imageWidth ? startPosition : 0,
+                    minLength, minLength);
             profileImage.setImageBitmap(bitmap);
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -101,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
             finish();
         }
 
-        questMainLayout = (LinearLayout)findViewById(R.id.quest_main_layout);
+        questMainLayout = (LinearLayout) findViewById(R.id.quest_main_layout);
         fab = (FloatingActionButton)findViewById(R.id.fab);
 
         this.setProfile();
@@ -112,19 +114,22 @@ public class MainActivity extends AppCompatActivity {
         button_logout = (Button)findViewById(R.id.button_logout);
         button_exit = (Button)findViewById(R.id.button_exit);
 
-        questList = new ArrayList<QuestEntry>();
+        questList = new ArrayList<QuestEntryView>();
 
         for (int i = 0; i < questCount; i++) {                      // 퀘스트 엔트리 생성
-            QuestEntry questEntry = new QuestEntry(getApplicationContext());
+            QuestEntry questEntry = new QuestEntry();
             questEntry.setQuestIndex(questList.size());
             questEntry.setRequester(this.userID);
             questEntry.setQuestInfo(i + "번째 요청 : 아메리카노", "충남대 5호관 604호", "0"+"원", "테스트용");
-            questList.add(questEntry);
-        }
-
-        for (int i = 0; i < questList.size(); i++) {                // 레이아웃에 엔트리를 뷰로 추가
-
-            questMainLayout.addView(questList.get(i));
+            QuestEntryView questEntryView = new QuestEntryView(getApplicationContext(), questEntry);
+            questEntryView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    viewQuestEntry(((QuestEntryView)v).getQuestEntry());
+                }
+            });
+            questList.add(questEntryView);
+            questMainLayout.addView(questEntryView.inflate(getApplicationContext()));
         }
 
         fab.setOnClickListener(new View.OnClickListener() {
@@ -143,34 +148,52 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case ADD_QUEST:
                 if (resultCode == AddQuest.QUEST_ADDED) {     // Intent로 받아온 정보로 엔트리 추가
-                    QuestEntry newQuestEntry = new QuestEntry(getApplicationContext());
+                    QuestEntry newQuestEntry = new QuestEntry();
                     newQuestEntry.setQuestIndex(questList.size());          // 거래번호
                     newQuestEntry.setRequester(this.userID);
                     newQuestEntry.setQuestInfo(data.getStringExtra("Title")
                                                 ,data.getStringExtra("Area")
                                                 ,data.getStringExtra("Reward")
                                                 ,data.getStringExtra("Comment"));
-                    questList.add(newQuestEntry);
-                    questMainLayout.addView(newQuestEntry, 0);
+                    QuestEntryView newQuestEntryView = new QuestEntryView(getApplicationContext(), newQuestEntry);
+                    newQuestEntryView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            viewQuestEntry(((QuestEntryView)v).getQuestEntry());
+                        }
+                    });
+                    questList.add(newQuestEntryView);
+                    questMainLayout.addView(newQuestEntryView.inflate(getApplicationContext()));
                 }
                 break;
             case VIEW_QUEST:
+                if (resultCode == ViewQuest.QUEST_REQUEST_CANCELED) {
+                    QuestEntry beDeletedEntry = (QuestEntry)data.getSerializableExtra("rc");
+                    for (int i = 0; i < questList.size(); i++) {
+                        if (questList.get(i).getQuestEntry().equals(beDeletedEntry)) {
+                            questMainLayout.removeViewInLayout(questList.get(i));
+                            questList.remove(i);
+                            break;
+                        }
+                    }
+                }
                 break;
             default:
         }
     }
 
-    public void onClickedQuestEntry(View v) {
-        QuestEntry selectedEntry = new QuestEntry(getApplicationContext());
-        if (v.getId() == R.id.quest_main_layout) {
-            Toast.makeText(this, "entry clicked.", Toast.LENGTH_LONG).show();
-            /*  issue #3
-            Intent intent = new Intent(MainActivity.this, ViewQuest.class);
-            intent.putExtra("entry", selectedEntry);
-            intent.putExtra("viewerId", userID);
-            startActivityForResult(intent, VIEW_QUEST);
-            */
+    public void questListRefresh() {
+        questMainLayout.removeAllViewsInLayout();
+        for (int i = 0; i < questList.size(); i++) {                // 레이아웃에 엔트리를 뷰로 추가
+            questMainLayout.addView(questList.get(i).inflate(getApplicationContext()));
         }
+    }
+
+    public void viewQuestEntry(QuestEntry questEntry) {
+        Intent intent = new Intent(getApplicationContext(), ViewQuest.class);
+        intent.putExtra("entry", questEntry);
+        intent.putExtra("viewerId", userID);
+        this.startActivityForResult(intent, VIEW_QUEST);
     }
 
     public void onClickedInMenu(View v) {
@@ -178,27 +201,31 @@ public class MainActivity extends AppCompatActivity {
             case R.id.button_userinfomodify:
                 break;
             case R.id.button_continue_trade:
-                questMainLayout.removeAllViewsInLayout();
                 for (int i = 0; i < questList.size(); i++) {
-                    QuestEntry tempEntry = questList.get(i);
+                    QuestEntry tempEntry = questList.get(i).getQuestEntry();
                     if ((tempEntry.getRequester() == this.userID
                             || tempEntry.getRespondent().contains(this.userID)
                             || tempEntry.getAcceptor() == this.userID)
                             && tempEntry.getState() < QuestEntry.COMPLETED) {      // 완료되지 않은 거래만 출력
-                        questMainLayout.addView(tempEntry);
+                        questMainLayout.getChildAt(i).setVisibility(LinearLayout.VISIBLE);
+                    }
+                    else {
+                        questMainLayout.getChildAt(i).setVisibility(LinearLayout.GONE);
                     }
                 }
                 slideInit();
-               break;
+                break;
             case R.id.button_finished_trade:
-                questMainLayout.removeAllViewsInLayout();
                 for (int i = 0; i < questList.size(); i++) {
-                    QuestEntry tempEntry = questList.get(i);
+                    QuestEntry tempEntry = questList.get(i).getQuestEntry();
                     if ((tempEntry.getRequester() == this.userID
                             || tempEntry.getRespondent().contains(this.userID)
                             || tempEntry.getAcceptor() == this.userID)
                             && tempEntry.getState() == QuestEntry.COMPLETED) {      // 완료된 거래만 출력
-                        questMainLayout.addView(tempEntry);
+                        questMainLayout.getChildAt(i).setVisibility(LinearLayout.VISIBLE);
+                    }
+                    else {
+                        questMainLayout.getChildAt(i).setVisibility(LinearLayout.GONE);
                     }
                 }
                 slideInit();
