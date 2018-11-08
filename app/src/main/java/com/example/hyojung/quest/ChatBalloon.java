@@ -1,13 +1,16 @@
 package com.example.hyojung.quest;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
@@ -36,17 +39,30 @@ public class ChatBalloon extends LinearLayout {
         this.setGravity(Gravity.RIGHT);
     }
 
+    public void resize() {
+        final int displayWidth = getResources().getDisplayMetrics().widthPixels;
+        final LinearLayout boxLayout = (LinearLayout)this.findViewById(R.id.chat_totalchatbox);
+        ViewTreeObserver observer = boxLayout.getViewTreeObserver();
+        observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                if (boxLayout.getWidth() > displayWidth * 0.8) {
+                    boxLayout.getLayoutParams().width = (int)(displayWidth * 0.8);
+                    boxLayout.requestLayout();
+                }
+            }
+        });
+    }
     public ChatBalloon inflate(Context context) {
-        LinearLayout thisFrame = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.chat_other_balloon, this, true);
+        ChatBalloon thisFrame = (ChatBalloon) LayoutInflater.from(context).inflate(R.layout.chat_other_balloon, this, true);
+        LinearLayout textList = ((LinearLayout)thisFrame.findViewById(R.id.balloon_text_list));
         for (int i = 0; i < inputString.size(); i++) {
             TextView tempText = (TextView) View.inflate(context, R.layout.chat_balloon, null);
             tempText.setText(inputString.get(i));
-            ((LinearLayout)this.findViewById(R.id.balloon_text_list)).addView(tempText);
-            ((LinearLayout)this.findViewById(R.id.balloon_text_list)).setLayoutParams(
-                    new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-            );
+            textList.addView(tempText);
+            textList.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
         }
-        return this;
+        return thisFrame;
     }
 
 }

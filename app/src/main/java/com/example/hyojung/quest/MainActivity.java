@@ -104,13 +104,6 @@ public class MainActivity extends AppCompatActivity {
             finish();
         }
 
-        AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
-
-            }
-        });
-
         questMainLayout = (LinearLayout) findViewById(R.id.quest_main_layout);
         fab = (FloatingActionButton)findViewById(R.id.fab);
 
