@@ -73,6 +73,9 @@ public class LoginActivity extends AppCompatActivity {
 
                 @Override
                 public void onSuccess(UserProfile userProfile) {
+
+
+
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     intent.putExtra("kakaoID", userProfile.getId());
                     intent.putExtra("kakaoNickName", userProfile.getNickname());
