@@ -1,11 +1,11 @@
 package com.example.hyojung.quest;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.util.Log;
@@ -21,6 +21,14 @@ import com.kakao.usermgmt.callback.LogoutResponseCallback;
 import com.kakao.usermgmt.callback.MeResponseCallback;
 import com.kakao.usermgmt.response.model.UserProfile;
 import com.kakao.util.exception.KakaoException;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.net.Socket;
 import java.security.MessageDigest;
 
 public class LoginActivity extends AppCompatActivity {
@@ -72,10 +80,9 @@ public class LoginActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void onSuccess(UserProfile userProfile) {
-
-
-
+                public void onSuccess(final UserProfile userProfile) {
+                    LoginQuery clientLoginQuery = new LoginQuery(userProfile.getId(), userProfile.getNickname(), userProfile.getProfileImagePath());
+                    new JSONTask(clientLoginQuery).execute("http://168.188.127.175:3000");
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     intent.putExtra("kakaoID", userProfile.getId());
                     intent.putExtra("kakaoNickName", userProfile.getNickname());
@@ -107,8 +114,7 @@ public class LoginActivity extends AppCompatActivity {
         if (requestCode == LOGIN_SUCCESS) {
             if (resultCode == LOGOUT) {
                 this.logout();
-            }
-            else if (resultCode == EXIT) {
+            } else if (resultCode == EXIT) {
                 finish();
             }
         }

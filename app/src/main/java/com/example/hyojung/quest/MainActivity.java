@@ -160,12 +160,12 @@ public class MainActivity extends AppCompatActivity {
             case ADD_QUEST:
                 if (resultCode == AddQuest.QUEST_ADDED) {     // Intent로 받아온 정보로 엔트리 추가
                     QuestEntry newQuestEntry = new QuestEntry();
-                    newQuestEntry.setQuestIndex(questList.size());          // 거래번호
                     newQuestEntry.setRequester(this.userID);
                     newQuestEntry.setQuestInfo(data.getStringExtra("Title")
                                                 ,data.getStringExtra("Area")
                                                 ,data.getStringExtra("Reward")
                                                 ,data.getStringExtra("Comment"));
+                    new JSONTask(newQuestEntry).execute("http://168.188.127.175:3000");
                     QuestEntryView newQuestEntryView = new QuestEntryView(getApplicationContext(), newQuestEntry);
                     newQuestEntryView.setOnClickListener(new View.OnClickListener() {
                         @Override

@@ -3,7 +3,7 @@ package com.example.hyojung.quest;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class QuestEntry implements Serializable {
+public class QuestEntry extends Query implements Serializable {
     private static final long serialVersionUID = 1L;
 
     public final static int UPLOADED = 0, RESPONDED = 1, ACCEPTED = 2, NOT_PAID = 3, COMPLETED = 4;
