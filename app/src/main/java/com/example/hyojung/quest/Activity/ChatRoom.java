@@ -1,4 +1,4 @@
-package com.example.hyojung.quest;
+package com.example.hyojung.quest.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,11 +12,15 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
+import com.example.hyojung.quest.ChatBalloon;
+import com.example.hyojung.quest.ChatLog;
+import com.example.hyojung.quest.R;
+
 public class ChatRoom extends AppCompatActivity {
 
     ChatLog chatLog;
 
-    final static int EXIT = 0;
+    final public static int EXIT = 0;
     ScrollView chat_scroll;
     LinearLayout chatList;
     Button button_chat_send;

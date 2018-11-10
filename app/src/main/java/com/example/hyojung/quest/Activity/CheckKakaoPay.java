@@ -1,4 +1,4 @@
-package com.example.hyojung.quest;
+package com.example.hyojung.quest.Activity;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -9,6 +9,8 @@ import android.util.JsonReader;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.Toast;
+
+import com.example.hyojung.quest.R;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,7 +25,7 @@ import javax.net.ssl.HttpsURLConnection;
 
 public class CheckKakaoPay extends AppCompatActivity {
 
-    final static int EXIT = 0;
+    final public static int EXIT = 0;
     long point;
     Button button_point_refresh, button_point_charge;
 

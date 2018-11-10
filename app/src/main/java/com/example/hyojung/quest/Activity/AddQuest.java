@@ -1,4 +1,4 @@
-package com.example.hyojung.quest;
+package com.example.hyojung.quest.Activity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -10,9 +10,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.hyojung.quest.R;
+
 public class AddQuest extends AppCompatActivity {
 
-    final static int QUEST_ADDED = 0;
+    final public static int QUEST_ADDED = 0;
     EditText inputTitle, inputArea, inputReward, inputComment;
     Button submitButton, cancelButton;
     @Override

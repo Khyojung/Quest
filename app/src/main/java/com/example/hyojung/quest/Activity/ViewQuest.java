@@ -1,4 +1,4 @@
-package com.example.hyojung.quest;
+package com.example.hyojung.quest.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,12 +8,13 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.hyojung.quest.Queries.QuestQuery;
+import com.example.hyojung.quest.R;
 
 import java.util.ArrayList;
 
 public class ViewQuest extends AppCompatActivity {
 
-    final static int QUEST_CANCELED = 0, QUEST_REQUEST_CANCELED = 1, QUEST_RESPONDED = 2, QUEST_RESPOND_CANCELED = 3, BACK_PRESSED = 4;
+    final public static int QUEST_CANCELED = 0, QUEST_REQUEST_CANCELED = 1, QUEST_RESPONDED = 2, QUEST_RESPOND_CANCELED = 3, BACK_PRESSED = 4;
 
     long viewerId;
     QuestQuery viewingEntry;

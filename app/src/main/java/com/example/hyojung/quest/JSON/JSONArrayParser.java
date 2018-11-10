@@ -1,14 +1,21 @@
 package com.example.hyojung.quest.JSON;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class JSONArrayParser extends ArrayList<LinkedHashMap<String, Object>> {
-    String input = "";
+public class JSONArrayParser {
+    ArrayList<LinkedHashMap<String, Object>> list = new ArrayList<LinkedHashMap<String, Object>>();
+    String input;
+
     public JSONArrayParser(String input) {
-        input = input.substring(1, input.length() - 1);
+        this.input = input.substring(1, input.length() - 1);
+    }
+
+    public ArrayList<LinkedHashMap<String, Object>> parse() {
         ArrayList<String> tempList = new ArrayList<String>();
 
         Pattern pattern = Pattern.compile("\\{.+?\\}");
@@ -19,34 +26,34 @@ public class JSONArrayParser extends ArrayList<LinkedHashMap<String, Object>> {
 
         for (int i = 0; i < tempList.size(); i++) {
             LinkedHashMap<String, Object> tempHashMap = new LinkedHashMap<String, Object>();
-            int pointer = 0;
-            Pattern pattern2 = Pattern.compile("\\\".+?(\\\":)((\\\".+?\\\")|(-?[0-9]+)|null)");
+            Pattern pattern2 = Pattern.compile("\\\\(\\\").+?((\\\"):)((\\\\(\\\").+?(\\\\)(\\\"))|(-?[0-9]+)|null)");
             Matcher matcher2 = pattern2.matcher(tempList.get(i));
-            while(matcher2.find()) {
+            while (matcher2.find()) {
                 String tempEntry = tempList.get(i).substring(matcher2.start(), matcher2.end());
-                tempHashMap.put(tempEntry.substring(0,  tempEntry.indexOf(':'))
-                        , tempEntry.substring(tempEntry.indexOf(':')+1));
+                tempEntry = tempEntry.replaceAll("\\\\(\\\")", "\"");
+                tempHashMap.put(tempEntry.substring(0, tempEntry.indexOf(':')),
+                        tempEntry.substring(tempEntry.indexOf(':') + 1));
             }
-            super.add(tempHashMap);
+            list.add(new LinkedHashMap<String, Object>(tempHashMap));
         }
 
-        for (int i = 0; i < super.size(); i++) {
+        for (int i = 0; i < list.size(); i++) {
             LinkedHashMap<String, Object> tempHashMap = new LinkedHashMap<String, Object>();
-            for (String key : super.get(i).keySet()) {
-                Object value = null;
-                String valueString = (String)super.get(i).get(key);
+            for (String key : list.get(i).keySet()) {
+                Object value = 1;
+                String valueString = (String) list.get(i).get(key);
                 if (valueString.startsWith("\"") && valueString.endsWith("\"")) {
-                    value = valueString.substring(1, valueString.length()-1);
-                }
-                else if (valueString.equals("null")){
+                    value = valueString.substring(1, valueString.length() - 1);
+                } else if (valueString.equals("null")) {
                     value = null;
-                }
-                else if (valueString.matches("-?[1-9]+[0-9]*|0")) {
+                } else if (valueString.matches("-?[1-9]+[0-9]*|0")) {
                     value = Long.valueOf(valueString);
                 }
-                tempHashMap.put(key.substring(1,  key.length() - 1), value);
+                Log.i("Parse", key + ", " + value);
+                tempHashMap.put(key.substring(1, key.length() - 1), value);
             }
-            super.set(i, tempHashMap);
+            list.set(i, new LinkedHashMap<String, Object>(tempHashMap));
         }
+        return new ArrayList<LinkedHashMap<String, Object>>(list);
     }
 }

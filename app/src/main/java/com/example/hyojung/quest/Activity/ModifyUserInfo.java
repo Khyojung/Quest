@@ -1,4 +1,4 @@
-package com.example.hyojung.quest;
+package com.example.hyojung.quest.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,9 +10,11 @@ import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.example.hyojung.quest.R;
+
 public class ModifyUserInfo extends AppCompatActivity {
 
-    final static int DEFAULT = 0, USE_SPARE_NICKNAME = 1, USE_SPARE_PROFILE = 2;
+    final public static int DEFAULT = 0, USE_SPARE_NICKNAME = 1, USE_SPARE_PROFILE = 2;
 
 
     TextView kakao_name, spare_name;

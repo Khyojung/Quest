@@ -1,4 +1,4 @@
-package com.example.hyojung.quest;
+package com.example.hyojung.quest.Activity;
 
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.example.hyojung.quest.Queries.LoginQuery;
 import com.example.hyojung.quest.JSON.JSONSendTask;
+import com.example.hyojung.quest.R;
 import com.kakao.auth.AuthType;
 import com.kakao.auth.ISessionCallback;
 import com.kakao.auth.Session;
@@ -29,7 +30,7 @@ public class LoginActivity extends AppCompatActivity {
     SessionCallback callback;
     LoginActivity instance;
 
-    final static int LOGIN_SUCCESS = 0, LOGIN_FAILURE = 1, LOGOUT = 2, EXIT = 3;
+    final public static int LOGIN_SUCCESS = 0, LOGIN_FAILURE = 1, LOGOUT = 2, EXIT = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

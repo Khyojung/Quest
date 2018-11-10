@@ -1,9 +1,11 @@
-package com.example.hyojung.quest;
+package com.example.hyojung.quest.Activity;
 
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+
+import com.example.hyojung.quest.R;
 
 public class PayProcess extends AppCompatActivity {
 

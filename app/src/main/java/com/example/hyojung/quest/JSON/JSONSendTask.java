@@ -14,13 +14,14 @@ import java.net.HttpURLConnection;
 import java.net.ProtocolException;
 import java.net.URL;
 
-public class JSONSendTask extends AsyncTask<String, String, Void> {
+public class JSONSendTask extends AsyncTask<Void, String, Void> {
 
     Query query;
+    String urlString = "http://168.188.127.175:3000";
 
     public JSONSendTask(Query query) {
         this.query = query;
-        this.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "http://168.188.127.175:3000");
+        this.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private HttpURLConnection setConnection(String string) {
@@ -56,11 +57,11 @@ public class JSONSendTask extends AsyncTask<String, String, Void> {
     }
 
     @Override
-    protected Void doInBackground(String[] args) {
+    protected Void doInBackground(Void... voids) {
         JSONObject jsonObject = null;
         if (query instanceof LoginQuery) {
             LoginQuery clientLoginQuery = (LoginQuery)query;
-            HttpURLConnection conn = this.setConnection(args[0] + "/login");
+            HttpURLConnection conn = this.setConnection(urlString + "/login");
             jsonObject = new JSONObject();
             jsonObject.put("uid", clientLoginQuery.get_id());
             jsonObject.put("nickname", clientLoginQuery.getNickName());
@@ -70,7 +71,7 @@ public class JSONSendTask extends AsyncTask<String, String, Void> {
         }
         else if (query instanceof ChatQuery) {
             ChatQuery clientChatQuery = (ChatQuery) query;
-            HttpURLConnection conn = this.setConnection(args[0] + "/chat");
+            HttpURLConnection conn = this.setConnection(urlString + "/chat");
             jsonObject = new JSONObject();
             jsonObject.put("cid", clientChatQuery.getQuestId());
             jsonObject.put("sender", clientChatQuery.getSenderId());
@@ -81,4 +82,5 @@ public class JSONSendTask extends AsyncTask<String, String, Void> {
         }
         return null;
     }
+
 }
