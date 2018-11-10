@@ -3,21 +3,20 @@ package com.example.hyojung.quest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.example.hyojung.quest.Queries.QuestQuery;
 
 import java.util.ArrayList;
 
 public class ViewQuest extends AppCompatActivity {
 
-    final static int QUEST_CANCELED = 0, QUEST_REQUEST_CANCELED = 1, QUEST_RESPONDED = 2, QUEST_RESPOND_CANCELED = 3;
+    final static int QUEST_CANCELED = 0, QUEST_REQUEST_CANCELED = 1, QUEST_RESPONDED = 2, QUEST_RESPOND_CANCELED = 3, BACK_PRESSED = 4;
 
     long viewerId;
-    QuestEntry viewingEntry;
+    QuestQuery viewingEntry;
     TextView title, area, reward, comment;
     Button questCancelButton, submitCancelButton, respondButton, respondCancelButton, backButton;
 
@@ -39,7 +38,7 @@ public class ViewQuest extends AppCompatActivity {
 
         Intent viewIntent = getIntent();
         viewerId = viewIntent.getLongExtra("viewerId", -1);
-        viewingEntry = (QuestEntry)viewIntent.getSerializableExtra("entry");
+        viewingEntry = (QuestQuery)viewIntent.getSerializableExtra("entry");
         ArrayList<String> entryInfo = viewingEntry.getQuestInfo();
         title.setText(entryInfo.get(0));
         area.setText(entryInfo.get(1));
@@ -97,7 +96,7 @@ public class ViewQuest extends AppCompatActivity {
     }
 
     public void setButtonsVisiblitiy() {
-        if (viewingEntry.getState() != QuestEntry.ACCEPTED) {      // 진행중인 거래가 아닌경우 거래 취소버튼 숨기기
+        if (viewingEntry.getState() != QuestQuery.ACCEPTED) {      // 진행중인 거래가 아닌경우 거래 취소버튼 숨기기
             questCancelButton.setEnabled(false);
             questCancelButton.setVisibility(Button.GONE);
         }
@@ -106,7 +105,7 @@ public class ViewQuest extends AppCompatActivity {
             respondButton.setVisibility(Button.GONE);
             respondCancelButton.setEnabled(false);
             respondCancelButton.setVisibility(Button.GONE);
-            if (viewingEntry.getState() == QuestEntry.COMPLETED) {     // 이미 완료된 거래를 보는 경우 요청 취소버튼 숨기기
+            if (viewingEntry.getState() == QuestQuery.COMPLETED) {     // 이미 완료된 거래를 보는 경우 요청 취소버튼 숨기기
                 submitCancelButton.setEnabled(false);
                 submitCancelButton.setVisibility(Button.GONE);
             }
@@ -114,7 +113,7 @@ public class ViewQuest extends AppCompatActivity {
         else {                                                  // 해당 거래를 다른 사람이 보는 경우 요청 취소버튼 숨기기
             submitCancelButton.setEnabled(false);
             submitCancelButton.setVisibility(Button.INVISIBLE);
-            if (viewingEntry.getState() >= QuestEntry.ACCEPTED) {         // 이미 매칭된 퀘스트인 경우 응답 버튼 숨기기
+            if (viewingEntry.getState() >= QuestQuery.ACCEPTED) {         // 이미 매칭된 퀘스트인 경우 응답 버튼 숨기기
                 respondButton.setEnabled(false);
                 respondButton.setVisibility(Button.GONE);
             }
@@ -123,5 +122,11 @@ public class ViewQuest extends AppCompatActivity {
                 respondCancelButton.setVisibility(Button.GONE);
             }
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        setResult(BACK_PRESSED);
+        finish();
     }
 }

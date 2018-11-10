@@ -1,6 +1,4 @@
-package com.example.hyojung.quest;
-
-import java.io.Serializable;
+package com.example.hyojung.quest.Queries;
 
 public class ChatQuery extends Query {
     private static final long serialVersionUID = 1L;

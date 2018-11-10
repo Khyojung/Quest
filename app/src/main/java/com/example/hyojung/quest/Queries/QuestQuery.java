@@ -1,14 +1,14 @@
-package com.example.hyojung.quest;
+package com.example.hyojung.quest.Queries;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class QuestEntry extends Query implements Serializable {
+public class QuestQuery extends Query implements Serializable {
     private static final long serialVersionUID = 1L;
 
     public final static int UPLOADED = 0, RESPONDED = 1, ACCEPTED = 2, NOT_PAID = 3, COMPLETED = 4;
-    private long questIndex;
-    private long requester, acceptor;
+    private Long questIndex;
+    private Long requester, acceptor;
     private ArrayList<Long> respondent = new ArrayList<Long>();
     private String title, area, reward, comment;
     private int state = 0;
@@ -71,11 +71,11 @@ public class QuestEntry extends Query implements Serializable {
 
     @Override
     public boolean equals(Object otherQuestEntry) {
-        if (!(otherQuestEntry instanceof QuestEntry)) {
+        if (!(otherQuestEntry instanceof QuestQuery)) {
             return false;
         } else if (otherQuestEntry == null) {
             return false;
         }
-        return this.questIndex == ((QuestEntry)otherQuestEntry).getQuestIndex();
+        return this.questIndex == ((QuestQuery)otherQuestEntry).getQuestIndex();
     }
 }

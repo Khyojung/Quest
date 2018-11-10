@@ -4,15 +4,15 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.hyojung.quest.Queries.LoginQuery;
 import com.kakao.auth.AuthType;
-import com.kakao.auth.ErrorCode;
 import com.kakao.auth.ISessionCallback;
 import com.kakao.auth.Session;
 import com.kakao.network.ErrorResult;
@@ -22,13 +22,6 @@ import com.kakao.usermgmt.callback.MeResponseCallback;
 import com.kakao.usermgmt.response.model.UserProfile;
 import com.kakao.util.exception.KakaoException;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.net.Socket;
 import java.security.MessageDigest;
 
 public class LoginActivity extends AppCompatActivity {
@@ -82,7 +75,7 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(final UserProfile userProfile) {
                     LoginQuery clientLoginQuery = new LoginQuery(userProfile.getId(), userProfile.getNickname(), userProfile.getProfileImagePath());
-                    new JSONTask(clientLoginQuery).execute("http://168.188.127.175:3000");
+                    JSONTask jsonTask = new JSONTask(clientLoginQuery, getApplicationContext());
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     intent.putExtra("kakaoID", userProfile.getId());
                     intent.putExtra("kakaoNickName", userProfile.getNickname());
@@ -92,20 +85,14 @@ public class LoginActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(ErrorResult errorResult) {
-                    String message = "failed to get user info. msg=" + errorResult;
-                    ErrorCode result = ErrorCode.valueOf(errorResult.getErrorCode());
-                    if (result == ErrorCode.CLIENT_ERROR_CODE) {
-
-                    } else {
-
-                    }
+                    Toast.makeText(instance, "로그인 실패", Toast.LENGTH_LONG).show();
                 }
             });
         }
 
         @Override
         public void onSessionOpenFailed(KakaoException exception) {
-            Toast.makeText(instance, "로그인 실패", Toast.LENGTH_LONG).show();
+            Toast.makeText(instance, "로그아웃", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -127,5 +114,11 @@ public class LoginActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        finish();
     }
 }
