@@ -36,10 +36,11 @@ import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
 
+    final static int MODIFY_USER_INFO = 0, ADD_QUEST = 1, VIEW_QUEST = 2, CHECK_KAKAO_PAY = 3, CHAT_TEST = 4;
+
     LinearLayout questMainLayout;
     ArrayList<QuestEntryView> questList;
     int questCount = 3;
-    final static int MODIFY_USER_INFO = 0, ADD_QUEST = 1, VIEW_QUEST = 2, CHECK_KAKAO_PAY = 3, CHAT_TEST = 4;
     FloatingActionButton fab;
 
     long userID;
@@ -52,66 +53,16 @@ public class MainActivity extends AppCompatActivity {
     Button button_userinfomodify, button_continue_trade, button_finished_trade,
             button_charge_send, button_logout, button_exit, button_developer_test;
 
-    public boolean loginCheck(Intent intent) {
-        if (intent == null) {
-            return false;
-        }
-        this.userID = intent.getLongExtra("kakaoID",-1);
-        this.userNickName = intent.getStringExtra("kakaoNickName");
-        this.profileImagePath = intent.getStringExtra("kakaoProfileImage");
-        return userID != -1;
-    }
-
-    public void setProfile() {
-        profileNickName = (TextView)findViewById(R.id.text_userNickName);
-        profileNickName.setText(this.userNickName);
-        profileImage = (ImageView) findViewById(R.id.image_profile);
-        this.setProfileImage();
-    }
-
-    public void setProfileImage() {
-        Thread thread = new Thread() {
-            @Override
-            public void run() {
-                try {
-                    URL url = new URL(profileImagePath);
-                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                    connection.setDoInput(true);
-                    connection.connect();
-                    InputStream input = connection.getInputStream();
-                    bitmap = BitmapFactory.decodeStream(input);
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-        thread.start();
-        try {
-            thread.join();
-            int imageWidth = bitmap.getWidth(), imageHeight = bitmap.getHeight();
-            int maxLength = Math.max(imageWidth, imageHeight), minLength = Math.min(imageWidth, imageHeight);
-            int startPosition = (maxLength - minLength) / 2;
-            bitmap = Bitmap.createBitmap(bitmap,
-                    imageWidth > imageHeight ? startPosition : 0,
-                    imageHeight > imageWidth ? startPosition : 0,
-                    minLength, minLength);
-            profileImage.setImageBitmap(bitmap);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         if (!this.loginCheck(getIntent())) {
+            Toast.makeText(this, "로그인에 문제가 발생하였습니다.", Toast.LENGTH_LONG).show();
             Intent intent = new Intent();
             setResult(LoginActivity.LOGIN_FAILURE);
-            Toast.makeText(this, "로그인에 문제가 발생하였습니다.", Toast.LENGTH_LONG).show();
             finish();
         }
 
@@ -127,9 +78,11 @@ public class MainActivity extends AppCompatActivity {
         button_exit = (Button)findViewById(R.id.button_exit);
         button_developer_test = (Button)findViewById(R.id.button_developer_test);
 
+        /*
         questList = new ArrayList<QuestEntryView>();
         ReadTableThread readTableThread = new ReadTableThread();
         readTableThread.execute();
+        */
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -199,6 +152,58 @@ public class MainActivity extends AppCompatActivity {
             default:
         }
     }
+
+    public boolean loginCheck(Intent intent) {
+        if (intent == null) {
+            return false;
+        }
+        this.userID = intent.getLongExtra("kakaoID",-1);
+        this.userNickName = intent.getStringExtra("kakaoNickName");
+        this.profileImagePath = intent.getStringExtra("kakaoProfileImage");
+        return userID != -1;
+    }
+
+    public void setProfile() {
+        profileNickName = (TextView)findViewById(R.id.text_userNickName);
+        profileNickName.setText(this.userNickName);
+        profileImage = (ImageView) findViewById(R.id.image_profile);
+        this.setProfileImage();
+    }
+
+    public void setProfileImage() {
+        Thread thread = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    URL url = new URL(profileImagePath);
+                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                    connection.setDoInput(true);
+                    connection.connect();
+                    InputStream input = connection.getInputStream();
+                    bitmap = BitmapFactory.decodeStream(input);
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        thread.start();
+        try {
+            thread.join();
+            int imageWidth = bitmap.getWidth(), imageHeight = bitmap.getHeight();
+            int maxLength = Math.max(imageWidth, imageHeight), minLength = Math.min(imageWidth, imageHeight);
+            int startPosition = (maxLength - minLength) / 2;
+            bitmap = Bitmap.createBitmap(bitmap,
+                    imageWidth > imageHeight ? startPosition : 0,
+                    imageHeight > imageWidth ? startPosition : 0,
+                    minLength, minLength);
+            profileImage.setImageBitmap(bitmap);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public void addQuestEntryIntoViewAndList(QuestEntryView questEntryView) {
         questList.add(questEntryView);
