@@ -1,4 +1,4 @@
-package com.example.hyojung.quest;
+package com.example.hyojung.quest.JSON;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;

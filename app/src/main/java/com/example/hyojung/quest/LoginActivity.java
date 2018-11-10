@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
@@ -12,6 +11,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.hyojung.quest.Queries.LoginQuery;
+import com.example.hyojung.quest.JSON.JSONSendTask;
 import com.kakao.auth.AuthType;
 import com.kakao.auth.ISessionCallback;
 import com.kakao.auth.Session;
@@ -41,23 +41,6 @@ public class LoginActivity extends AppCompatActivity {
         Session.getCurrentSession().open(AuthType.KAKAO_LOGIN_ALL, LoginActivity.this);
     }
 
-    // 해시값 구하는 코드
-    public void getHashKey() {
-        try {
-            PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_SIGNATURES);
-            for (Signature signature : info.signatures) {
-                MessageDigest md;
-                md = MessageDigest.getInstance("SHA");
-                md.update(signature.toByteArray());
-                String something = new String(Base64.encode(md.digest(), 0));
-                Log.e("Hash key", something);
-            }
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            Log.e("name not found", e.toString());
-        }
-    }
-
     private class SessionCallback implements ISessionCallback {
         //로그인 성공
         @Override
@@ -65,6 +48,7 @@ public class LoginActivity extends AppCompatActivity {
             UserManagement.requestMe(new MeResponseCallback() {
                 @Override
                 public void onSessionClosed(ErrorResult errorResult) {
+
                 }
 
                 @Override
@@ -75,7 +59,7 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(final UserProfile userProfile) {
                     LoginQuery clientLoginQuery = new LoginQuery(userProfile.getId(), userProfile.getNickname(), userProfile.getProfileImagePath());
-                    JSONTask jsonTask = new JSONTask(clientLoginQuery, getApplicationContext());
+                    JSONSendTask jsonTask = new JSONSendTask(clientLoginQuery);
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     intent.putExtra("kakaoID", userProfile.getId());
                     intent.putExtra("kakaoNickName", userProfile.getNickname());
@@ -121,4 +105,22 @@ public class LoginActivity extends AppCompatActivity {
         super.onPause();
         finish();
     }
+
+
+    // 해시값 구하는 코드
+    public void getHashKey() {
+        try {
+            PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_SIGNATURES);
+            for (Signature signature : info.signatures) {
+                MessageDigest md;
+                md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                String something = new String(Base64.encode(md.digest(), 0));
+                Log.e("Hash key", something);
+            }
+        } catch (Exception e) {
+            Log.e("name not found", e.toString());
+        }
+    }
+
 }

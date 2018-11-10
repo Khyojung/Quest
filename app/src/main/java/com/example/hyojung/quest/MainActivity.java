@@ -1,9 +1,9 @@
 package com.example.hyojung.quest;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -16,13 +16,20 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.hyojung.quest.JSON.JSONArrayParser;
 import com.example.hyojung.quest.Queries.QuestQuery;
-import com.example.hyojung.quest.Queries.RequestTableQuery;
+import com.example.hyojung.quest.JSON.JSONSendTask;
 
+import org.json.simple.JSONObject;
+
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -98,6 +105,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         if (!this.loginCheck(getIntent())) {
@@ -120,8 +128,8 @@ public class MainActivity extends AppCompatActivity {
         button_developer_test = (Button)findViewById(R.id.button_developer_test);
 
         questList = new ArrayList<QuestEntryView>();
-        RequestTableQuery requestTableQuery = new RequestTableQuery();
-        new JSONTask(requestTableQuery, GlobalApplication.getCurrentActivity());
+        ReadTableThread readTableThread = new ReadTableThread();
+        readTableThread.execute();
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -131,32 +139,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
-    public void initQuestView(String result) {
-        JSONArrayParser jsonArrayParser = new JSONArrayParser(result);
-        Log.i("tableTask", jsonArrayParser.toString());
-        LinearLayout quest_main_layout = (LinearLayout)findViewById(R.id.quest_main_layout);
-        for (int i = 0; i < jsonArrayParser.size(); i++) {
-            HashMap<String, Object> tableEntry = jsonArrayParser.get(i);
-            QuestQuery questEntry = new QuestQuery();
-            questEntry.setQuestIndex((Long) tableEntry.get("tid"));
-            questEntry.setRequester((Long) tableEntry.get("quester"));
-            questEntry.setAcceptor((Long) tableEntry.get("questee"));
-            questEntry.setQuestInfo((String) tableEntry.get("title")
-                    , (String) tableEntry.get("place")
-                    , (String) tableEntry.get("pay")
-                    , (String) tableEntry.get("comment"));
-            QuestEntryView newQuestEntryView = new QuestEntryView(getApplicationContext(), questEntry);
-            newQuestEntryView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    viewQuestEntry(((QuestEntryView)v).getQuestQuery());
-                }
-            });
-            this.addQuestEntryIntoViewAndList(newQuestEntryView);
-        }
-    }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -180,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
                                                 ,data.getStringExtra("Area")
                                                 ,data.getStringExtra("Reward")
                                                 ,data.getStringExtra("Comment"));
-                    new JSONTask(newQuestQuery, getApplicationContext());
+                    new JSONSendTask(newQuestQuery);
                     QuestEntryView newQuestEntryView = new QuestEntryView(getApplicationContext(), newQuestQuery);
                     newQuestEntryView.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -305,4 +287,95 @@ public class MainActivity extends AppCompatActivity {
         finish();
     }
 
+    public class ReadTableThread extends AsyncTask<String, String, Void> {
+        public ReadTableThread () {
+            this.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "http://168.188.127.175:3000");
+        }
+
+        private HttpURLConnection setConnection(String string) {
+            HttpURLConnection conn = null;
+            try {
+                URL url = new URL(string);
+                conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("POST");
+                conn.setRequestProperty("Cache-Control", "no-cache");
+                conn.setRequestProperty("Content-Type", "application/json;charset=UTF-8");
+                conn.setRequestProperty("Accept", "application/json");
+                conn.setDoOutput(true);
+                conn.setDoInput(true);
+                conn.connect();
+            } catch (ProtocolException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return conn;
+        }
+
+        private void sendJSONObject(HttpURLConnection conn, JSONObject jsonObject) {
+            try {
+                OutputStreamWriter dataOutputStream = new OutputStreamWriter(conn.getOutputStream(), "UTF-8");
+                dataOutputStream.write(jsonObject.toString());
+                dataOutputStream.flush();
+                dataOutputStream.close();
+                conn.getResponseCode();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        protected Void doInBackground(String... strings) {
+            JSONObject jsonObject = null;
+            try {
+                HttpURLConnection conn = this.setConnection("http://168.188.127.175:3000/tables");
+                jsonObject = new JSONObject();
+                jsonObject.put("tablePass", "request quest tables");
+                this.sendJSONObject(conn, jsonObject);
+                Log.i("tableTask", "request");
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                StringBuilder stringBuilder = new StringBuilder();
+                String line;
+                while ((line = bufferedReader.readLine()) != null) {
+                    stringBuilder.append(line + "\n");
+                }
+                bufferedReader.close();
+                final String resultLine = new String(line);
+                Log.i("tableTask", resultLine);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        initQuestView(resultLine);
+                    }
+                });
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        public void initQuestView(String result) {
+            JSONArrayParser jsonArrayParser = new JSONArrayParser(result);
+            Log.i("tableTask", jsonArrayParser.toString());
+            for (int i = 0; i < jsonArrayParser.size(); i++) {
+                HashMap<String, Object> tableEntry = jsonArrayParser.get(i);
+                QuestQuery questEntry = new QuestQuery();
+                questEntry.setQuestIndex((Long) tableEntry.get("tid"));
+                questEntry.setRequester((Long) tableEntry.get("quester"));
+                questEntry.setAcceptor((Long) tableEntry.get("questee"));
+                questEntry.setQuestInfo((String) tableEntry.get("title")
+                        , (String) tableEntry.get("place")
+                        , (String) tableEntry.get("pay")
+                        , (String) tableEntry.get("comment"));
+                QuestEntryView newQuestEntryView = new QuestEntryView(getApplicationContext(), questEntry);
+                newQuestEntryView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        viewQuestEntry(((QuestEntryView)v).getQuestQuery());
+                    }
+                });
+                addQuestEntryIntoViewAndList(newQuestEntryView);
+            }
+        }
+    }
 }
