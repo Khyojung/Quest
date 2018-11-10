@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public class QuestQuery extends Query implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    public final static int UPLOADED = 0, RESPONDED = 1, ACCEPTED = 2, NOT_PAID = 3, COMPLETED = 4;
+    public final static int CANCELED = -1, UPLOADED = 0, RESPONDED = 1, ACCEPTED = 2, NOT_PAID = 3, COMPLETED = 4;
     private Long questIndex;
     private Long requester, acceptor;
     private ArrayList<Long> respondent = new ArrayList<Long>();

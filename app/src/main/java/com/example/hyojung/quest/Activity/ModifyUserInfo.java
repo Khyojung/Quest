@@ -14,7 +14,7 @@ import com.example.hyojung.quest.R;
 
 public class ModifyUserInfo extends AppCompatActivity {
 
-    final public static int DEFAULT = 0, USE_SPARE_NICKNAME = 1, USE_SPARE_PROFILE = 2;
+    final public static int DEFAULT = 10, USE_SPARE_NICKNAME = 11, USE_SPARE_PROFILE = 12;
 
 
     TextView kakao_name, spare_name;

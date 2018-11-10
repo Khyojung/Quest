@@ -26,7 +26,7 @@ public class JSONArrayParser {
 
         for (int i = 0; i < tempList.size(); i++) {
             LinkedHashMap<String, Object> tempHashMap = new LinkedHashMap<String, Object>();
-            Pattern pattern2 = Pattern.compile("\\\\(\\\").+?((\\\"):)((\\\\(\\\").+?(\\\\)(\\\"))|(-?[0-9]+)|null)");
+            Pattern pattern2 = Pattern.compile("\\\\(\\\").+?((\\\"):)((\\\\(\\\").*?(\\\\)(\\\"))|(-?[0-9]+)|null)");
             Matcher matcher2 = pattern2.matcher(tempList.get(i));
             while (matcher2.find()) {
                 String tempEntry = tempList.get(i).substring(matcher2.start(), matcher2.end());
@@ -44,12 +44,13 @@ public class JSONArrayParser {
                 String valueString = (String) list.get(i).get(key);
                 if (valueString.startsWith("\"") && valueString.endsWith("\"")) {
                     value = valueString.substring(1, valueString.length() - 1);
+                    Log.i("value", (String)value);
                 } else if (valueString.equals("null")) {
                     value = null;
                 } else if (valueString.matches("-?[1-9]+[0-9]*|0")) {
                     value = Long.valueOf(valueString);
                 }
-                Log.i("Parse", key + ", " + value);
+                Log.i("key", key);
                 tempHashMap.put(key.substring(1, key.length() - 1), value);
             }
             list.set(i, new LinkedHashMap<String, Object>(tempHashMap));

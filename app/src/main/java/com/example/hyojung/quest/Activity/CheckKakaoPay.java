@@ -6,17 +6,13 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.JsonReader;
-import android.util.Log;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.example.hyojung.quest.R;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
@@ -25,7 +21,7 @@ import javax.net.ssl.HttpsURLConnection;
 
 public class CheckKakaoPay extends AppCompatActivity {
 
-    final public static int EXIT = 0;
+    final public static int EXIT = 20;
     long point;
     Button button_point_refresh, button_point_charge;
 
@@ -66,7 +62,6 @@ public class CheckKakaoPay extends AppCompatActivity {
                     myConnection.setDoOutput(true);
                     myConnection.setDoInput(true);
                     int result = myConnection.getResponseCode();
-                    Log.i("CONN", String.valueOf(result));
                     if(result == 200) {
                         InputStream responseBody = myConnection.getInputStream();
                         InputStreamReader responseBodyReader = new InputStreamReader(responseBody, "UTF-8");
@@ -82,7 +77,6 @@ public class CheckKakaoPay extends AppCompatActivity {
                         payIntent.setData(Uri.parse(getScheme));
                         startActivity(payIntent);
                     }
-                    Log.i("CONN", "ABC");
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }catch (IOException e) {

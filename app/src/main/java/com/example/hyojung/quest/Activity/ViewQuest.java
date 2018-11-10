@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 public class ViewQuest extends AppCompatActivity {
 
-    final public static int QUEST_CANCELED = 0, QUEST_REQUEST_CANCELED = 1, QUEST_RESPONDED = 2, QUEST_RESPOND_CANCELED = 3, BACK_PRESSED = 4;
+    final public static int QUEST_CANCELED = 10, QUEST_REQUEST_CANCELED = 11, QUEST_RESPONDED = 12, QUEST_RESPOND_CANCELED = 13, BACK_PRESSED = 14;
 
     long viewerId;
     QuestQuery viewingEntry;
@@ -90,7 +90,7 @@ public class ViewQuest extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
-                setResult(RESULT_CANCELED, intent);
+                setResult(BACK_PRESSED, intent);
                 finish();
             }
         });

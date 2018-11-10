@@ -30,7 +30,7 @@ public class LoginActivity extends AppCompatActivity {
     SessionCallback callback;
     LoginActivity instance;
 
-    final public static int LOGIN_SUCCESS = 0, LOGIN_FAILURE = 1, LOGOUT = 2, EXIT = 3;
+    final public static int LOGIN_SUCCESS = 10, LOGIN_FAILURE = 11, LOGOUT = 12, EXIT = 13;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +60,7 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(final UserProfile userProfile) {
                     LoginQuery clientLoginQuery = new LoginQuery(userProfile.getId(), userProfile.getNickname(), userProfile.getProfileImagePath());
-                    JSONSendTask jsonTask = new JSONSendTask(clientLoginQuery);
+                    JSONSendTask jsonTask = new JSONSendTask(clientLoginQuery, 0);
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     intent.putExtra("kakaoID", userProfile.getId());
                     intent.putExtra("kakaoNickName", userProfile.getNickname());
@@ -100,13 +100,6 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        finish();
-    }
-
 
     // 해시값 구하는 코드
     public void getHashKey() {

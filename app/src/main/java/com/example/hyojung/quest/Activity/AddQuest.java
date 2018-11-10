@@ -1,20 +1,17 @@
 package com.example.hyojung.quest.Activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.example.hyojung.quest.R;
 
 public class AddQuest extends AppCompatActivity {
 
-    final public static int QUEST_ADDED = 0;
+    final public static int QUEST_ADDED = 10, BACK_PRESSED = 11;
     EditText inputTitle, inputArea, inputReward, inputComment;
     Button submitButton, cancelButton;
     @Override
@@ -46,10 +43,16 @@ public class AddQuest extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
-                setResult(RESULT_CANCELED, intent);
+                setResult(BACK_PRESSED, intent);
                 finish();
             }
         });
+    }
 
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent();
+        setResult(BACK_PRESSED, intent);
+        finish();
     }
 }

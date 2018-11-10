@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,7 +19,7 @@ public class ChatRoom extends AppCompatActivity {
 
     ChatLog chatLog;
 
-    final public static int EXIT = 0;
+    final public static int EXIT = 20;
     ScrollView chat_scroll;
     LinearLayout chatList;
     Button button_chat_send;
