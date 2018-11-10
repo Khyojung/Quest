@@ -44,13 +44,11 @@ public class JSONArrayParser {
                 String valueString = (String) list.get(i).get(key);
                 if (valueString.startsWith("\"") && valueString.endsWith("\"")) {
                     value = valueString.substring(1, valueString.length() - 1);
-                    Log.i("value", (String)value);
                 } else if (valueString.equals("null")) {
                     value = null;
                 } else if (valueString.matches("-?[1-9]+[0-9]*|0")) {
                     value = Long.valueOf(valueString);
                 }
-                Log.i("key", key);
                 tempHashMap.put(key.substring(1, key.length() - 1), value);
             }
             list.set(i, new LinkedHashMap<String, Object>(tempHashMap));

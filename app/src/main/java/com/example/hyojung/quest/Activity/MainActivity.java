@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.hyojung.quest.BitmapMaker;
 import com.example.hyojung.quest.JSON.JSONArrayParser;
 import com.example.hyojung.quest.Queries.QuestQuery;
 import com.example.hyojung.quest.JSON.JSONSendTask;
@@ -39,7 +40,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -52,10 +52,10 @@ public class MainActivity extends AppCompatActivity {
     FloatingActionButton fab;
 
     long userID;
-    String userNickName, profileImagePath;
+    String kakaoNickName, profileImagePath;
 
     TextView profileNickName;
-    Bitmap bitmap = null;
+    Bitmap bitmap_kakao, bitmap_spare;
     ImageView profileImage;
 
     Button button_userinfomodify, button_continue_trade, button_finished_trade,
@@ -112,14 +112,17 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case MODIFY_USER_INFO:
-                if (requestCode == ModifyUserInfo.DEFAULT) {
+                if (resultCode == ModifyUserInfo.DEFAULT) {
+                    profileNickName.setText(kakaoNickName);
+                    profileImage.setImageBitmap(bitmap_kakao);
                     break;
                 }
-                if ((requestCode & ModifyUserInfo.USE_SPARE_NICKNAME) == ModifyUserInfo.USE_SPARE_NICKNAME) {
-
+                if ((resultCode & ModifyUserInfo.USE_SPARE_NICKNAME) == ModifyUserInfo.USE_SPARE_NICKNAME) {
+                    profileNickName.setText(data.getStringExtra("spareName"));
                 }
-                if ((requestCode & ModifyUserInfo.USE_SPARE_PROFILE) == ModifyUserInfo.USE_SPARE_PROFILE) {
-
+                if ((resultCode & ModifyUserInfo.USE_SPARE_PROFILE) == ModifyUserInfo.USE_SPARE_PROFILE) {
+                    bitmap_spare = BitmapMaker.byteArrayToBitmap(data.getByteArrayExtra("spareBitmap"));
+                    profileImage.setImageBitmap(bitmap_spare);
                 }
                 break;
             case ADD_QUEST:
@@ -169,14 +172,14 @@ public class MainActivity extends AppCompatActivity {
             return false;
         }
         this.userID = intent.getLongExtra("kakaoID", -1);
-        this.userNickName = intent.getStringExtra("kakaoNickName");
+        this.kakaoNickName = intent.getStringExtra("kakaoNickName");
         this.profileImagePath = intent.getStringExtra("kakaoProfileImage");
         return userID != -1;
     }
 
     public void setProfile() {
         profileNickName = (TextView) findViewById(R.id.text_userNickName);
-        profileNickName.setText(this.userNickName);
+        profileNickName.setText(this.kakaoNickName);
         profileImage = (ImageView) findViewById(R.id.image_profile);
         this.setProfileImage();
     }
@@ -191,7 +194,7 @@ public class MainActivity extends AppCompatActivity {
                     connection.setDoInput(true);
                     connection.connect();
                     InputStream input = connection.getInputStream();
-                    bitmap = BitmapFactory.decodeStream(input);
+                    bitmap_kakao = BitmapFactory.decodeStream(input);
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
@@ -202,14 +205,8 @@ public class MainActivity extends AppCompatActivity {
         thread.start();
         try {
             thread.join();
-            int imageWidth = bitmap.getWidth(), imageHeight = bitmap.getHeight();
-            int maxLength = Math.max(imageWidth, imageHeight), minLength = Math.min(imageWidth, imageHeight);
-            int startPosition = (maxLength - minLength) / 2;
-            bitmap = Bitmap.createBitmap(bitmap,
-                    imageWidth > imageHeight ? startPosition : 0,
-                    imageHeight > imageWidth ? startPosition : 0,
-                    minLength, minLength);
-            profileImage.setImageBitmap(bitmap);
+            bitmap_kakao = BitmapMaker.resizeForProfile(bitmap_kakao);
+            profileImage.setImageBitmap(bitmap_kakao);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -232,6 +229,7 @@ public class MainActivity extends AppCompatActivity {
         switch (v.getId()) {
             case R.id.button_userinfomodify:
                 Intent intent = new Intent(MainActivity.this, ModifyUserInfo.class);
+                intent.putExtra("bitmap", BitmapMaker.BitmapToByteArray(bitmap_kakao));
                 startActivityForResult(intent, MODIFY_USER_INFO);
                 slideInit();
                 break;
