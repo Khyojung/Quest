@@ -130,9 +130,11 @@ public class MainActivity extends AppCompatActivity {
                     QuestQuery newQuestQuery = new QuestQuery();
                     newQuestQuery.setRequester(this.userID);
                     newQuestQuery.setQuestInfo(data.getStringExtra("Title")
-                            , data.getStringExtra("Area")
+                            , data.getStringExtra("Place")
                             , data.getStringExtra("Reward")
                             , data.getStringExtra("Comment"));
+                    double[] position = data.getDoubleArrayExtra("Position");
+                    newQuestQuery.setPosition(position[0], position[1]);
                     new JSONSendTask(newQuestQuery, QuestQuery.UPLOADED);
                     QuestEntryView newQuestEntryView = new QuestEntryView(getApplicationContext(), newQuestQuery);
                     newQuestEntryView.setOnClickListener(new View.OnClickListener() {
@@ -141,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
                             viewQuestEntry(((QuestEntryView) v).getQuestQuery());
                         }
                     });
-                    this.addQuestEntryIntoViewAndList(newQuestEntryView);
+                    tableRefreshHandler.sendEmptyMessage(REFRESH_TABLE);
                 }
                 break;
             case VIEW_QUEST:

@@ -39,19 +39,17 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <EditText
-            android:id="@+id/textbox_add_area"
+        <TextView
+            android:id="@+id/text_point"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="본인 위치"
-            android:inputType="textPersonName" />
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:textSize="20sp" />
 
         <Button
-            android:id="@+id/button3"
+            android:id="@+id/button_addPoint"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:text="GPS" />
     </LinearLayout>
 

@@ -24,7 +24,7 @@ public class ChatRoom extends AppCompatActivity {
     LinearLayout chatList;
     Button button_chat_send;
     EditText textbox_input;
-    long myId, otherId;
+    long questId, myId, otherId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

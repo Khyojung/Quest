@@ -11,6 +11,7 @@ public class QuestQuery extends Query implements Serializable {
     private Long requester, acceptor;
     private ArrayList<Long> respondent = new ArrayList<Long>();
     private String title, area, reward, comment;
+    private double latitude, longitude;
     private int state = 0;
 
     public void setQuestIndex(long index) {
@@ -34,6 +35,15 @@ public class QuestQuery extends Query implements Serializable {
         this.area = area;
         this.reward = reward;
         this.comment = comment;
+    }
+
+    public void setPosition(double latitude, double longitude) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
+
+    public double[] getPosition() {
+        return new double[] { this.latitude, this.longitude };
     }
 
     public void setState(int state) {

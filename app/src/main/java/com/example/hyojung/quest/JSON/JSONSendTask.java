@@ -125,6 +125,8 @@ public class JSONSendTask extends AsyncTask<Void, Void, Void> {
                 jsonObject.put("title", questInfo.get(0));
                 jsonObject.put("place", questInfo.get(1));
                 jsonObject.put("pay", Long.valueOf(questInfo.get(2)));
+                jsonObject.put("latitude", clientQuestQuery.getPosition()[0]);
+                jsonObject.put("longitude", clientQuestQuery.getPosition()[1]);
                 jsonObject.put("comment", questInfo.get(3));
                 jsonObject.put("requester", clientQuestQuery.getRequester());
                 jsonObject.put("state", clientQuestQuery.getState());

@@ -4,7 +4,8 @@
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <application
         android:name=".GlobalApplication"
         android:allowBackup="true"
@@ -45,22 +46,22 @@
 
         <activity
             android:name=".Activity.CheckKakaoPay"
-            android:label="CheckKakaoPay">
-        </activity>
+            android:label="CheckKakaoPay"/>
 
         <activity
             android:name=".Activity.PayProcess"
-            android:label="PayProcess">
-        </activity>
+            android:label="PayProcess"/>
 
         <activity
             android:name=".Activity.ChatRoom"
-            android:label="ChatRoom">
-        </activity>
+            android:label="ChatRoom"/>
 
         <meta-data
             android:name="com.kakao.sdk.AppKey"
             android:value="@string/kakao_app_key" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyAnIwIc8AKwA-lF_URU7WyZxnMiptES0mA"/>
     </application>
 
 
