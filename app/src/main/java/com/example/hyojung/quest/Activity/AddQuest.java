@@ -17,7 +17,7 @@ import com.google.android.gms.location.places.ui.PlacePicker;
 
 public class AddQuest extends AppCompatActivity {
 
-    final public static int QUEST_ADDED = 10, BACK_PRESSED = 11, PLACE_PICKER_REQUEST = 20;
+    final public static int QUEST_ADDED = 10, BACK_PRESSED = 11, PLACE_PICKER_REQUEST = 1;
     EditText inputTitle, inputReward, inputComment;
     TextView textPoint;
     double latitude, longitude;
@@ -76,17 +76,19 @@ public class AddQuest extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == PLACE_PICKER_REQUEST && resultCode == RESULT_OK) {
-            final Place place = PlacePicker.getPlace(this, data);
-            final CharSequence name = place.getName();
-            final CharSequence address = place.getAddress();
-            String attributions = (String) place.getAttributions();
-            if (attributions == null) {
-                attributions = "";
+        if (requestCode == PLACE_PICKER_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                final Place place = PlacePicker.getPlace(this, data);
+                final CharSequence name = place.getName();
+                final CharSequence address = place.getAddress();
+                String attributions = (String) place.getAttributions();
+                if (attributions == null) {
+                    attributions = "";
+                }
+                this.latitude = place.getLatLng().latitude;
+                this.longitude = place.getLatLng().longitude;
+                textPoint.setText(name);
             }
-            this.latitude = place.getLatLng().latitude;
-            this.longitude = place.getLatLng().longitude;
-            textPoint.setText(name);
         }
     }
 

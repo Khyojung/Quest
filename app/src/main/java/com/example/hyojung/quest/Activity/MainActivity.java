@@ -133,8 +133,7 @@ public class MainActivity extends AppCompatActivity {
                             , data.getStringExtra("Place")
                             , data.getStringExtra("Reward")
                             , data.getStringExtra("Comment"));
-                    double[] position = data.getDoubleArrayExtra("Position");
-                    newQuestQuery.setPosition(position[0], position[1]);
+                    newQuestQuery.setPosition(data.getDoubleArrayExtra("Position"));
                     new JSONSendTask(newQuestQuery, QuestQuery.UPLOADED);
                     QuestEntryView newQuestEntryView = new QuestEntryView(getApplicationContext(), newQuestQuery);
                     newQuestEntryView.setOnClickListener(new View.OnClickListener() {
@@ -384,6 +383,14 @@ public class MainActivity extends AppCompatActivity {
                         , (String) tableEntry.get("place")
                         , String.valueOf(tableEntry.get("pay"))
                         , (String) tableEntry.get("comment"));
+                Object latitude = tableEntry.get("latitude"), longitude = tableEntry.get("longitude");
+                if (latitude instanceof Long) {
+                    latitude = ((Long)latitude).doubleValue();
+                }
+                if (longitude instanceof Long) {
+                    longitude = ((Long)longitude).doubleValue();
+                }
+                questEntry.setPosition(new double[] {(Double)latitude, (Double)longitude});
                 questEntry.setState(((Long) tableEntry.get("state")).intValue());
                 if (questEntry.getState() != QuestQuery.CANCELED) {
                     QuestEntryView newQuestEntryView = new QuestEntryView(getApplicationContext(), questEntry);
