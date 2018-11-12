@@ -30,7 +30,7 @@ public class LoginActivity extends AppCompatActivity {
     SessionCallback callback;
     LoginActivity instance;
 
-    final public static int LOGIN_SUCCESS = 10, LOGIN_FAILURE = 11, LOGOUT = 12, EXIT = 13;
+    final public static int LOGIN_SUCCESS = 10;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,11 +61,11 @@ public class LoginActivity extends AppCompatActivity {
                 public void onSuccess(final UserProfile userProfile) {
                     LoginQuery clientLoginQuery = new LoginQuery(userProfile.getId(), userProfile.getNickname(), userProfile.getProfileImagePath());
                     JSONSendTask jsonTask = new JSONSendTask(clientLoginQuery, 0);
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    Intent intent = new Intent(instance, MainActivity.class);
                     intent.putExtra("kakaoID", userProfile.getId());
                     intent.putExtra("kakaoNickName", userProfile.getNickname());
                     intent.putExtra("kakaoProfileImage", userProfile.getProfileImagePath());
-                    startActivityForResult(intent, LOGIN_SUCCESS);
+                    startActivity(intent);
                 }
 
                 @Override
@@ -79,26 +79,6 @@ public class LoginActivity extends AppCompatActivity {
         public void onSessionOpenFailed(KakaoException exception) {
             Toast.makeText(instance, "로그아웃", Toast.LENGTH_LONG).show();
         }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == LOGIN_SUCCESS) {
-            if (resultCode == LOGOUT) {
-                this.logout();
-            } else if (resultCode == EXIT) {
-                finish();
-            }
-        }
-    }
-
-    public void logout() {
-        UserManagement.requestLogout(new LogoutResponseCallback() {
-            @Override
-            public void onCompleteLogout() {
-
-            }
-        });
     }
 
     // 해시값 구하는 코드
@@ -116,5 +96,4 @@ public class LoginActivity extends AppCompatActivity {
             Log.e("name not found", e.toString());
         }
     }
-
 }

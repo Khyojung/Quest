@@ -19,11 +19,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.hyojung.quest.BitmapMaker;
+import com.example.hyojung.quest.GlobalApplication;
 import com.example.hyojung.quest.JSON.JSONArrayParser;
 import com.example.hyojung.quest.Queries.QuestQuery;
 import com.example.hyojung.quest.JSON.JSONSendTask;
 import com.example.hyojung.quest.QuestEntryView;
 import com.example.hyojung.quest.R;
+import com.kakao.usermgmt.UserManagement;
+import com.kakao.usermgmt.callback.LogoutResponseCallback;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -78,8 +81,8 @@ public class MainActivity extends AppCompatActivity {
 
         if (!this.loginCheck(getIntent())) {
             Toast.makeText(this, "로그인에 문제가 발생하였습니다.", Toast.LENGTH_LONG).show();
-            Intent intent = new Intent();
-            setResult(LoginActivity.LOGIN_FAILURE);
+            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(intent);
             finish();
         }
 
@@ -268,11 +271,16 @@ public class MainActivity extends AppCompatActivity {
                 slideInit();
                 break;
             case R.id.button_logout:
-                setResult(LoginActivity.LOGOUT);
-                finish();
+                UserManagement.requestLogout(new LogoutResponseCallback() {
+                    @Override
+                    public void onCompleteLogout() {
+                        Intent logoutIntent = new Intent(GlobalApplication.getCurrentActivity(), LoginActivity.class);
+                        startActivity(logoutIntent);
+                        finish();
+                    }
+                });
                 break;
             case R.id.button_exit:
-                setResult(LoginActivity.EXIT);
                 finish();
                 break;
             case R.id.button_developer_test:
@@ -296,7 +304,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        setResult(LoginActivity.EXIT);
         finish();
     }
 
