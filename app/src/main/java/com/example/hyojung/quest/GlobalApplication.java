@@ -2,7 +2,6 @@ package com.example.hyojung.quest;
 
 import android.app.Activity;
 import android.app.Application;
-
 import com.kakao.auth.KakaoSDK;
 
 public class GlobalApplication extends Application {

@@ -46,12 +46,11 @@ import java.util.LinkedHashMap;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final int MODIFY_USER_INFO = 0, ADD_QUEST = 1, VIEW_QUEST = 2, CHECK_KAKAO_PAY = 3, CHAT_TEST = 4;
-    public static final int REFRESH_TABLE = 1;
+    public static final int MODIFY_USER_INFO = 10, ADD_QUEST = 11, VIEW_QUEST = 12, CHECK_KAKAO_PAY = 13, CHAT_TEST = 14;
+    public static final int REFRESH_TABLE = 21;
 
     LinearLayout questMainLayout;
     ArrayList<QuestEntryView> questList;
-    int questCount = 3;
     FloatingActionButton fab;
 
     long userID;
@@ -92,7 +91,11 @@ public class MainActivity extends AppCompatActivity {
 
         tableRefreshHandler.sendEmptyMessage(REFRESH_TABLE);
 
-        this.setProfile();
+        if (userID != 0) {
+            this.setProfile();
+        }
+
+
         button_userinfomodify = (Button) findViewById(R.id.button_userinfomodify);
         button_continue_trade = (Button) findViewById(R.id.button_continue_trade);
         button_finished_trade = (Button) findViewById(R.id.button_finished_trade);
