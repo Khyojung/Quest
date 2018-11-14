@@ -78,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        GlobalApplication.setCurrentActivity(this);
 
         if (!this.loginCheck(getIntent())) {
             Toast.makeText(this, "로그인에 문제가 발생하였습니다.", Toast.LENGTH_LONG).show();
@@ -130,14 +131,13 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case ADD_QUEST:
                 if (resultCode == AddQuest.QUEST_ADDED) {     // Intent로 받아온 정보로 엔트리 추가
-                    QuestQuery newQuestQuery = new QuestQuery();
-                    newQuestQuery.setRequester(this.userID);
+                    QuestQuery newQuestQuery = new QuestQuery(this.userID);
                     newQuestQuery.setQuestInfo(data.getStringExtra("Title")
                             , data.getStringExtra("Place")
                             , data.getStringExtra("Reward")
                             , data.getStringExtra("Comment"));
                     newQuestQuery.setPosition(data.getDoubleArrayExtra("Position"));
-                    new JSONSendTask(newQuestQuery, QuestQuery.UPLOADED);
+                    new JSONSendTask(newQuestQuery);
                     QuestEntryView newQuestEntryView = new QuestEntryView(getApplicationContext(), newQuestQuery);
                     newQuestEntryView.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -149,13 +149,11 @@ public class MainActivity extends AppCompatActivity {
                 }
                 break;
             case VIEW_QUEST:
-                if (resultCode == ViewQuest.QUEST_REQUEST_CANCELED) {
-                    QuestQuery beDeletedEntry = (QuestQuery) data.getSerializableExtra("rc");
-                    new JSONSendTask(beDeletedEntry, QuestQuery.CANCELED, tableRefreshHandler);
+                if (resultCode != ViewQuest.BACK_PRESSED) {
+                    QuestQuery beDeletedEntry = (QuestQuery) data.getSerializableExtra("requestUpdate");
+                    new JSONSendTask(beDeletedEntry, tableRefreshHandler);
                 }
-                else {
-                    tableRefreshHandler.sendEmptyMessage(REFRESH_TABLE);
-                }
+                tableRefreshHandler.sendEmptyMessage(REFRESH_TABLE);
                 break;
             case CHECK_KAKAO_PAY:
                 if (resultCode == CheckKakaoPay.EXIT) {
@@ -383,9 +381,8 @@ public class MainActivity extends AppCompatActivity {
             ArrayList<LinkedHashMap<String, Object>> jsonList = jsonArrayParser.parse();
             for (int i = 0; i < jsonList.size(); i++) {
                 HashMap<String, Object> tableEntry = jsonList.get(i);
-                QuestQuery questEntry = new QuestQuery();
+                QuestQuery questEntry = new QuestQuery((Long) tableEntry.get("quester"));
                 questEntry.setQuestIndex((Long) tableEntry.get("tid"));
-                questEntry.setRequester((Long) tableEntry.get("quester"));
                 questEntry.setQuestInfo((String) tableEntry.get("title")
                         , (String) tableEntry.get("place")
                         , String.valueOf(tableEntry.get("pay"))

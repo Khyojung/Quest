@@ -30,15 +30,13 @@ public class JSONSendTask extends AsyncTask<Void, Void, Void> {
     int taskType = 0;
     Handler handler;
 
-    public JSONSendTask(Query query, int taskType) {
+    public JSONSendTask(Query query) {
         this.query = query;
-        this.taskType = taskType;
         this.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    public JSONSendTask(Query query, int taskType, Handler postHandler) {
+    public JSONSendTask(Query query, Handler postHandler) {
         this.query = query;
-        this.taskType = taskType;
         this.handler = postHandler;
         this.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }

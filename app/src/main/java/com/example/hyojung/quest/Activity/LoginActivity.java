@@ -8,8 +8,11 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.hyojung.quest.GlobalApplication;
 import com.example.hyojung.quest.Queries.LoginQuery;
 import com.example.hyojung.quest.JSON.JSONSendTask;
 import com.example.hyojung.quest.R;
@@ -29,15 +32,28 @@ public class LoginActivity extends AppCompatActivity {
 
     SessionCallback callback;
     LoginActivity instance;
-
-    final public static int LOGIN_SUCCESS = 10;
+    Button button_adminAccess;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
+        GlobalApplication.setCurrentActivity(this);
         instance = this;
         callback = new SessionCallback();
+        button_adminAccess = (Button)findViewById(R.id.button_admin_login);
+        button_adminAccess.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LoginQuery clientLoginQuery = new LoginQuery(0, "관리자", "관리자");
+                JSONSendTask jsonTask = new JSONSendTask(clientLoginQuery);
+                Intent intent = new Intent(instance, MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+
         Session.getCurrentSession().addCallback(callback);
         Session.getCurrentSession().open(AuthType.KAKAO_LOGIN_ALL, LoginActivity.this);
     }
@@ -60,12 +76,13 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(final UserProfile userProfile) {
                     LoginQuery clientLoginQuery = new LoginQuery(userProfile.getId(), userProfile.getNickname(), userProfile.getProfileImagePath());
-                    JSONSendTask jsonTask = new JSONSendTask(clientLoginQuery, 0);
+                    JSONSendTask jsonTask = new JSONSendTask(clientLoginQuery);
                     Intent intent = new Intent(instance, MainActivity.class);
                     intent.putExtra("kakaoID", userProfile.getId());
                     intent.putExtra("kakaoNickName", userProfile.getNickname());
                     intent.putExtra("kakaoProfileImage", userProfile.getProfileImagePath());
                     startActivity(intent);
+                    finish();
                 }
 
                 @Override

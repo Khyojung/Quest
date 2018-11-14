@@ -61,7 +61,7 @@ public class ViewQuest extends AppCompatActivity {
             @Override
             public void onClick(View v) {           // 요청 취소
                 Intent intent = new Intent();
-                intent.putExtra("rc", viewingEntry);
+                intent.putExtra("resultUpdate", viewingEntry);
                 setResult(QUEST_REQUEST_CANCELED, intent);
                 finish();
             }
@@ -71,6 +71,7 @@ public class ViewQuest extends AppCompatActivity {
             @Override
             public void onClick(View v) {                  // 응답 버튼
                 Intent intent = new Intent();
+                intent.putExtra("resultUpdate", viewingEntry);
                 setResult(QUEST_RESPONDED, intent);
                 finish();
             }
@@ -80,7 +81,7 @@ public class ViewQuest extends AppCompatActivity {
             @Override
             public void onClick(View v) {            // 응답 취소 버튼
                 Intent intent = new Intent();
-                //intent.putExtra("Respondent", )
+                intent.putExtra("resultUpdate", viewingEntry);
                 setResult(QUEST_RESPOND_CANCELED, intent);
                 finish();
             }

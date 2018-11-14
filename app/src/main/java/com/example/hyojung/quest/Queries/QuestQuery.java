@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public class QuestQuery extends Query implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    public final static int CANCELED = -1, UPLOADED = 0, RESPONDED = 1, ACCEPTED = 2, NOT_PAID = 3, COMPLETED = 4;
+    public final static int CANCELED = -2, CREATED = -1, UPLOADED = 0, RESPONDED = 1, ACCEPTED = 2, COMPLETED = 3;
     private Long questIndex;
     private Long requester, acceptor;
     private ArrayList<Long> respondent = new ArrayList<Long>();
@@ -14,21 +14,31 @@ public class QuestQuery extends Query implements Serializable {
     private double[] coordinate = new double[2];
     private int state = 0;
 
+    public QuestQuery(long requester) {
+        this.requester = requester;
+        this.state = CREATED;
+    }
+
     public void setQuestIndex(long index) {
         this.questIndex = index;
     }
 
-    public void setRequester(long requester) {
-        this.requester = requester;
-    }
-
     public void addRespondent(long respondent) {
         this.respondent.add(respondent);
+        this.state = RESPONDED;
+    }
+
+    public void removeRespondent(Long respondent) {
+        this.respondent.remove(respondent);
+        if (this.respondent.isEmpty()) {
+            this.state = UPLOADED;
+        }
     }
 
     public void setAcceptor(long acceptor) {
-            this.acceptor = acceptor;
-        }
+        this.acceptor = acceptor;
+        this.state = ACCEPTED;
+    }
 
     public void setQuestInfo(String title, String area, String reward, String comment) {
         this.title = title;
@@ -41,6 +51,14 @@ public class QuestQuery extends Query implements Serializable {
         if (coordinate.length == 2) {
             System.arraycopy(coordinate, 0, this.coordinate, 0, 2);
         }
+    }
+
+    public void setCanceled() {
+        this.state = CANCELED;
+    }
+
+    public void setCompleted() {
+        this.state = COMPLETED;
     }
 
     public double[] getPosition() {
