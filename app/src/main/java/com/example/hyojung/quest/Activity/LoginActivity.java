@@ -46,8 +46,12 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 LoginQuery clientLoginQuery = new LoginQuery(0, "관리자", "관리자");
-                JSONSendTask jsonTask = new JSONSendTask(clientLoginQuery);
                 Intent intent = new Intent(instance, MainActivity.class);
+                intent.putExtra("kakaoID", 0);
+                intent.putExtra("kakaoNickName", "관리자");
+                intent.putExtra("kakaoProfileImage", "관리자");
+                JSONSendTask jsonTask = new JSONSendTask(clientLoginQuery);
+
                 startActivity(intent);
                 finish();
             }
