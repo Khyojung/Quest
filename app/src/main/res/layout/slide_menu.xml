@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/quest_menu_layout"
+    android:layout_width="180sp"
+    android:layout_height="match_parent"
+    android:layout_gravity="start"
+    android:background="#ffffff"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:weightSum="100">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10sp"
+                android:background="#EEEEEE"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/image_profile"
+                    android:layout_width="140sp"
+                    android:layout_height="140sp"
+                    android:layout_margin="10sp"/>
+
+                <TextView
+                    android:id="@+id/text_userNickName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="10sp"/>
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/button_userinfomodify"
+                android:layout_width="match_parent"
+                android:layout_height="60sp"
+                android:background="@drawable/menubutton"
+                android:onClick="onClickedInMenu"
+                android:textSize="20sp"
+                android:text="개인 정보 수정" />
+
+            <Button
+                android:id="@+id/button_continue_trade"
+                android:layout_width="match_parent"
+                android:layout_height="60sp"
+                android:background="@drawable/menubutton"
+                android:onClick="onClickedInMenu"
+                android:textSize="20sp"
+                android:text="진행 중 내역" />
+
+            <Button
+                android:id="@+id/button_finished_trade"
+                android:layout_width="match_parent"
+                android:layout_height="60sp"
+                android:background="@drawable/menubutton"
+                android:onClick="onClickedInMenu"
+                android:textSize="20sp"
+                android:text="거래 완료 내역" />
+
+            <Button
+                android:id="@+id/button_charge_send"
+                android:layout_width="match_parent"
+                android:layout_height="60sp"
+                android:background="@drawable/menubutton"
+                android:onClick="onClickedInMenu"
+                android:textSize="20sp"
+                android:text="충전 / 송금" />
+
+            <Button
+                android:id="@+id/button_logout"
+                android:layout_width="match_parent"
+                android:layout_height="60sp"
+                android:background="@drawable/menubutton"
+                android:onClick="onClickedInMenu"
+                android:textSize="20sp"
+                android:text="로그아웃" />
+
+            <Button
+                android:id="@+id/button_exit"
+                android:layout_width="match_parent"
+                android:layout_height="60sp"
+                android:background="@drawable/menubutton"
+                android:onClick="onClickedInMenu"
+                android:textSize="20sp"
+                android:text="나가기" />
+
+            <Button
+                android:id="@+id/button_developer_test"
+                android:layout_width="match_parent"
+                android:layout_height="60sp"
+                android:background="@drawable/menubutton"
+                android:onClick="onClickedInMenu"
+                android:textSize="20sp"
+                android:text="개발자 테스트용" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>
