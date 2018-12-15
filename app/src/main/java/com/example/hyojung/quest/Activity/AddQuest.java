@@ -17,9 +17,9 @@ import com.google.android.gms.location.places.ui.PlacePicker;
 
 public class AddQuest extends AppCompatActivity {
 
-    final public static int QUEST_ADDED = 10, BACK_PRESSED = 11, PLACE_PICKER_REQUEST = 1;
+    final public static int QUEST_ADDED = 10, BACK_PRESSED = 11, AREA_REQUEST = 1;
     EditText inputTitle, inputReward, inputComment;
-    TextView textPoint;
+    EditText textPoint;
     double latitude, longitude;
     Button addPointButton, submitButton, cancelButton;
     @Override
@@ -28,7 +28,7 @@ public class AddQuest extends AppCompatActivity {
         setContentView(R.layout.quest_add);
 
         inputTitle = (EditText)findViewById(R.id.textbox_add_title);
-        textPoint = (TextView)findViewById(R.id.text_point);
+        textPoint = (EditText)findViewById(R.id.text_point);
         inputReward = (EditText)findViewById(R.id.textbox_add_reward);
         inputComment = (EditText)findViewById(R.id.textbox_add_comment);
         addPointButton = (Button)findViewById(R.id.button_addPoint);
@@ -38,15 +38,8 @@ public class AddQuest extends AppCompatActivity {
         addPointButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PlacePicker.IntentBuilder intentBuilder = new PlacePicker.IntentBuilder();
-                try {
-                    Intent intent = intentBuilder.build(AddQuest.this);
-                    startActivityForResult(intent,PLACE_PICKER_REQUEST);
-                } catch (GooglePlayServicesRepairableException e) {
-                    e.printStackTrace();
-                } catch (GooglePlayServicesNotAvailableException e) {
-                    e.printStackTrace();
-                }
+                Intent intent = new Intent(AddQuest.this, AddPositionActivity.class);
+                startActivityForResult(intent, AREA_REQUEST);
             }
         });
 
@@ -76,18 +69,11 @@ public class AddQuest extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == PLACE_PICKER_REQUEST) {
-            if (resultCode == RESULT_OK) {
-                final Place place = PlacePicker.getPlace(this, data);
-                final CharSequence name = place.getName();
-                final CharSequence address = place.getAddress();
-                String attributions = (String) place.getAttributions();
-                if (attributions == null) {
-                    attributions = "";
-                }
-                this.latitude = place.getLatLng().latitude;
-                this.longitude = place.getLatLng().longitude;
-                textPoint.setText(name);
+        if (requestCode == AREA_REQUEST) {
+            if (resultCode == AddPositionActivity.AREA_SELECTED) {
+                this.latitude = data.getDoubleExtra("latitude", 0);
+                this.longitude = data.getDoubleExtra("longitude", 0);
+                textPoint.setText(data.getStringExtra("areaName"));
             }
         }
     }

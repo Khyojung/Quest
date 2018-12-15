@@ -39,12 +39,14 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <TextView
+        <EditText
             android:id="@+id/text_point"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textSize="20sp" />
+            android:ems="10"
+            android:hint="의뢰 요청 희망 위치"
+            android:inputType="text" />
 
         <Button
             android:id="@+id/button_addPoint"

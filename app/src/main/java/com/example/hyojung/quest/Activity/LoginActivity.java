@@ -38,9 +38,13 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
+
         GlobalApplication.setCurrentActivity(this);
         instance = this;
         callback = new SessionCallback();
+        Session.getCurrentSession().addCallback(callback);
+        Session.getCurrentSession().open(AuthType.KAKAO_LOGIN_ALL, LoginActivity.this);
+
         button_adminAccess = (Button)findViewById(R.id.button_admin_login);
         button_adminAccess.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,15 +55,10 @@ public class LoginActivity extends AppCompatActivity {
                 intent.putExtra("kakaoNickName", "관리자");
                 intent.putExtra("kakaoProfileImage", "관리자");
                 JSONSendTask jsonTask = new JSONSendTask(clientLoginQuery);
-
                 startActivity(intent);
                 finish();
             }
         });
-
-
-        Session.getCurrentSession().addCallback(callback);
-        Session.getCurrentSession().open(AuthType.KAKAO_LOGIN_ALL, LoginActivity.this);
     }
 
     private class SessionCallback implements ISessionCallback {

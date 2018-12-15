@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 public class ViewQuest extends AppCompatActivity {
 
-    final public static int QUEST_CANCELED = 10, QUEST_REQUEST_CANCELED = 11, QUEST_RESPONDED = 12, QUEST_RESPOND_CANCELED = 13, BACK_PRESSED = 14;
+    final public static int QUEST_DESTROYED = 10, QUEST_REQUEST_CANCELED = 11, QUEST_RESPONDED = 12, QUEST_RESPOND_CANCELED = 13, BACK_PRESSED = 14;
 
     long viewerId;
     QuestQuery viewingEntry;
@@ -52,7 +52,8 @@ public class ViewQuest extends AppCompatActivity {
             @Override
             public void onClick(View v) {           // 거래 파기
                 Intent intent = new Intent();
-                setResult(QUEST_CANCELED, intent);
+                viewingEntry.setCanceled();
+                setResult(QUEST_DESTROYED, intent);
                 finish();
             }
         });
@@ -61,6 +62,7 @@ public class ViewQuest extends AppCompatActivity {
             @Override
             public void onClick(View v) {           // 요청 취소
                 Intent intent = new Intent();
+                viewingEntry.setCanceled();
                 intent.putExtra("resultUpdate", viewingEntry);
                 setResult(QUEST_REQUEST_CANCELED, intent);
                 finish();

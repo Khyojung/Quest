@@ -91,8 +91,9 @@ public class MainActivity extends AppCompatActivity {
         fab = (FloatingActionButton) findViewById(R.id.fab);
 
         tableRefreshHandler.sendEmptyMessage(REFRESH_TABLE);
-
-        this.setProfile();
+        if (userID != 0) {
+            this.setProfile();
+        }
         button_userinfomodify = (Button) findViewById(R.id.button_userinfomodify);
         button_continue_trade = (Button) findViewById(R.id.button_continue_trade);
         button_finished_trade = (Button) findViewById(R.id.button_finished_trade);
@@ -137,6 +138,7 @@ public class MainActivity extends AppCompatActivity {
                             , data.getStringExtra("Reward")
                             , data.getStringExtra("Comment"));
                     newQuestQuery.setPosition(data.getDoubleArrayExtra("Position"));
+                    newQuestQuery.setState(QuestQuery.UPLOADED);
                     new JSONSendTask(newQuestQuery);
                     QuestEntryView newQuestEntryView = new QuestEntryView(getApplicationContext(), newQuestQuery);
                     newQuestEntryView.setOnClickListener(new View.OnClickListener() {
@@ -149,9 +151,9 @@ public class MainActivity extends AppCompatActivity {
                 }
                 break;
             case VIEW_QUEST:
-                if (resultCode != ViewQuest.BACK_PRESSED) {
-                    QuestQuery beDeletedEntry = (QuestQuery) data.getSerializableExtra("requestUpdate");
-                    new JSONSendTask(beDeletedEntry, tableRefreshHandler);
+                if (resultCode == ViewQuest.QUEST_REQUEST_CANCELED) {
+                    QuestQuery beCanceledQuest = (QuestQuery) data.getSerializableExtra("resultUpdate");
+                    new JSONSendTask(beCanceledQuest, tableRefreshHandler);
                 }
                 tableRefreshHandler.sendEmptyMessage(REFRESH_TABLE);
                 break;

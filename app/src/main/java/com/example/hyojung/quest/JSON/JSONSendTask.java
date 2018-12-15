@@ -27,7 +27,6 @@ public class JSONSendTask extends AsyncTask<Void, Void, Void> {
 
     Query query;
     String urlString = "http://168.188.127.175:3000";
-    int taskType = 0;
     Handler handler;
 
     public JSONSendTask(Query query) {
@@ -105,19 +104,18 @@ public class JSONSendTask extends AsyncTask<Void, Void, Void> {
         else if (query instanceof QuestQuery) {
             QuestQuery clientQuestQuery = (QuestQuery)query;
             String route = "";
-            switch (taskType) {
+            switch (clientQuestQuery.getState()) {
                 case QuestQuery.UPLOADED:
                     route = "/addQuest";
                     break;
                 case QuestQuery.CANCELED:
-                    route = "/cancelQuest";
+                    route = "/updateQuest";
                     break;
-                    default:
             }
             conn = this.setConnection(urlString + route);
             try {
                 ArrayList<String> questInfo = clientQuestQuery.getQuestInfo();
-                if (taskType == QuestQuery.CANCELED) {
+                if (clientQuestQuery.getState() == QuestQuery.CANCELED) {
                     jsonObject.put("tid", clientQuestQuery.getQuestIndex());
                 }
                 jsonObject.put("title", questInfo.get(0));
