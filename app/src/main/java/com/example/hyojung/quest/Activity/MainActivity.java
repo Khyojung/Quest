@@ -427,7 +427,8 @@ public class MainActivity extends AppCompatActivity {
                 HashMap<String, Object> tableEntry = jsonList.get(i);
                 QuestQuery questEntry = new QuestQuery((Long) tableEntry.get("quester"));
                 questEntry.setQuestIndex((Long) tableEntry.get("tid"));
-                questEntry.setAcceptor((Long) tableEntry.get("questee"));
+                if (tableEntry.get("questee") != null)
+                    questEntry.setAcceptor((Long) tableEntry.get("questee"));
                 questEntry.setQuestInfo((String) tableEntry.get("title")
                         , (String) tableEntry.get("place")
                         , String.valueOf(tableEntry.get("pay"))
