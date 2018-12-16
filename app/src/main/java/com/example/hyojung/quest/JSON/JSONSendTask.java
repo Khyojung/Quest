@@ -76,8 +76,8 @@ public class JSONSendTask extends AsyncTask<Void, Void, Void> {
                 stringBuilder.append(line);
             }
             result = stringBuilder.toString();
-            if (result.equals("CANCELED")) {
-                handler.sendEmptyMessage(MainActivity.REFRESH_TABLE);
+            if (result.equals("CANCELED") || result.equals("UPDATED")) {
+                handler.sendEmptyMessage(QuestQuery.UPLOADED);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -109,14 +109,17 @@ public class JSONSendTask extends AsyncTask<Void, Void, Void> {
                     route = "/addQuest";
                     break;
                 case QuestQuery.CANCELED:
+                case QuestQuery.ACCEPTED:
+                case QuestQuery.COMPLETED:
                     route = "/updateQuest";
                     break;
             }
             conn = this.setConnection(urlString + route);
             try {
                 ArrayList<String> questInfo = clientQuestQuery.getQuestInfo();
-                if (clientQuestQuery.getState() == QuestQuery.CANCELED) {
+                if (!(clientQuestQuery.getState() == QuestQuery.UPLOADED)) {
                     jsonObject.put("tid", clientQuestQuery.getQuestIndex());
+                    jsonObject.put("questee", clientQuestQuery.getAcceptor());
                 }
                 jsonObject.put("title", questInfo.get(0));
                 jsonObject.put("place", questInfo.get(1));

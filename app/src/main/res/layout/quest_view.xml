@@ -79,12 +79,26 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/button_cancel_quest"
+            android:id="@+id/button_destroyQuest"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
             android:layout_weight="1"
-            android:text="거래 취소" />
+            android:text="거래 파기" />
+
+        <Button
+            android:id="@+id/button_completeQuest"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="거래 완료" />
+
+        <Button
+            android:id="@+id/button_chatRoom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="채팅" />
 
         <Button
             android:id="@+id/button_cancel_request"
@@ -95,20 +109,12 @@
             android:text="요청 취소" />
 
         <Button
-            android:id="@+id/button_respond"
+            android:id="@+id/button_accept"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
             android:layout_weight="1"
-            android:text="응답" />
-
-        <Button
-            android:id="@+id/button_cancel_respond"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:layout_weight="1"
-            android:text="응답 취소" />
+            android:text="수락" />
 
         <Button
             android:id="@+id/button_view_exit"

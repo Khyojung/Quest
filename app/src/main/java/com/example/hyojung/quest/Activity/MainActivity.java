@@ -53,16 +53,15 @@ import java.util.LinkedHashMap;
 public class MainActivity extends AppCompatActivity {
 
     public static final int MODIFY_USER_INFO = 0, ADD_QUEST = 1, VIEW_QUEST = 2, CHECK_KAKAO_PAY = 3, CHAT_TEST = 4;
-    public static final int REFRESH_TABLE = 1;
 
     LinearLayout questMainLayout;
     ArrayList<QuestEntryView> questList;
     FloatingActionButton fab;
 
-    long userID;
-    String kakaoNickName, profileImagePath;
+    private long userID;
+    private String kakaoNickName, profileImagePath;
 
-    GPSInfomation gpsInfomation;
+    private GPSInfomation gpsInfomation;
     private boolean isAccessFineLocation = false;
     private boolean isAccessCoarseLocation = false;
     private boolean isPermission = false;
@@ -71,15 +70,13 @@ public class MainActivity extends AppCompatActivity {
     Bitmap bitmap_kakao, bitmap_spare;
     ImageView profileImage;
 
-    Button button_userinfomodify, button_continue_trade, button_finished_trade,
-            button_charge_send, button_logout, button_exit, button_developer_test;
+    Button button_userinfomodify, button_uploadedQuest, button_continueQuest, button_completedQuest,
+            button_charge_send, button_logout, button_exit;
 
     Handler tableRefreshHandler = new Handler() {
         @Override
         public void handleMessage(Message message) {
-            if (message.what == REFRESH_TABLE) {
-                new RefreshTableTask(gpsInfomation.getUserLocation());
-            }
+            new RefreshTableTask(gpsInfomation.getUserLocation(), message.what);
         }
     };
 
@@ -93,9 +90,7 @@ public class MainActivity extends AppCompatActivity {
         if (this.isPermission) {
             gpsInfomation = new GPSInfomation(MainActivity.this);
         }
-        else {
-            Log.i("warnlog", "권한 없음");
-        }
+
         if (!this.loginCheck(getIntent())) {
             Toast.makeText(this, "로그인에 문제가 발생하였습니다.", Toast.LENGTH_LONG).show();
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
@@ -106,17 +101,19 @@ public class MainActivity extends AppCompatActivity {
         questMainLayout = (LinearLayout) findViewById(R.id.quest_main_layout);
         fab = (FloatingActionButton) findViewById(R.id.fab);
 
-        tableRefreshHandler.sendEmptyMessage(REFRESH_TABLE);
-        if (userID != 0) {
+        tableRefreshHandler.sendEmptyMessage(QuestQuery.UPLOADED);
+        if (this.userID != 0) {
             this.setProfile();
         }
+
         button_userinfomodify = (Button) findViewById(R.id.button_userinfomodify);
-        button_continue_trade = (Button) findViewById(R.id.button_continue_trade);
-        button_finished_trade = (Button) findViewById(R.id.button_finished_trade);
+        button_uploadedQuest = (Button) findViewById(R.id.button_uploadedQuest);
+        button_continueQuest = (Button) findViewById(R.id.button_continueQuest);
+        button_completedQuest = (Button) findViewById(R.id.button_completeQuest);
         button_charge_send = (Button) findViewById(R.id.button_charge_send);
         button_logout = (Button) findViewById(R.id.button_logout);
         button_exit = (Button) findViewById(R.id.button_exit);
-        button_developer_test = (Button) findViewById(R.id.button_developer_test);
+
 
         questList = new ArrayList<QuestEntryView>();
 
@@ -163,15 +160,15 @@ public class MainActivity extends AppCompatActivity {
                             viewQuestEntry(((QuestEntryView) v).getQuestQuery());
                         }
                     });
-                    tableRefreshHandler.sendEmptyMessage(REFRESH_TABLE);
+                    tableRefreshHandler.sendEmptyMessage(QuestQuery.UPLOADED);
                 }
                 break;
             case VIEW_QUEST:
-                if (resultCode == ViewQuest.QUEST_REQUEST_CANCELED) {
-                    QuestQuery beCanceledQuest = (QuestQuery) data.getSerializableExtra("resultUpdate");
-                    new JSONSendTask(beCanceledQuest, tableRefreshHandler);
+                if (resultCode != ViewQuest.BACK_PRESSED) {
+                    QuestQuery beUpdatedQuest = (QuestQuery) data.getSerializableExtra("resultUpdate");
+                    new JSONSendTask(beUpdatedQuest, tableRefreshHandler);
                 }
-                tableRefreshHandler.sendEmptyMessage(REFRESH_TABLE);
+                tableRefreshHandler.sendEmptyMessage(QuestQuery.UPLOADED);
                 break;
             case CHECK_KAKAO_PAY:
                 if (resultCode == CheckKakaoPay.EXIT) {
@@ -179,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 break;
             case CHAT_TEST:
-                if (requestCode == ChatRoom.EXIT) {
+                if (resultCode == ChatRoom.EXIT) {
 
                 }
                 break;
@@ -194,7 +191,7 @@ public class MainActivity extends AppCompatActivity {
         this.userID = intent.getLongExtra("kakaoID", -1);
         this.kakaoNickName = intent.getStringExtra("kakaoNickName");
         this.profileImagePath = intent.getStringExtra("kakaoProfileImage");
-        return userID != -1;
+        return this.userID != -1;
     }
 
     public void setProfile() {
@@ -253,32 +250,16 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(intent, MODIFY_USER_INFO);
                 slideInit();
                 break;
-            case R.id.button_continue_trade:
-                for (int i = 0; i < questList.size(); i++) {
-                    QuestQuery tempEntry = questList.get(i).getQuestQuery();
-                    if ((tempEntry.getRequester() == this.userID
-                            || tempEntry.getRespondent().contains(this.userID)
-                            || tempEntry.getAcceptor() == this.userID)
-                            && tempEntry.getState() < QuestQuery.COMPLETED) {      // 완료되지 않은 거래만 출력
-                        questMainLayout.getChildAt(i).setVisibility(LinearLayout.VISIBLE);
-                    } else {
-                        questMainLayout.getChildAt(i).setVisibility(LinearLayout.GONE);
-                    }
-                }
+            case R.id.button_uploadedQuest:
+                this.tableRefreshHandler.sendEmptyMessage(QuestQuery.UPLOADED); // 수락 가능한
                 slideInit();
                 break;
-            case R.id.button_finished_trade:
-                for (int i = 0; i < questList.size(); i++) {
-                    QuestQuery tempEntry = questList.get(i).getQuestQuery();
-                    if ((tempEntry.getRequester() == this.userID
-                            || tempEntry.getRespondent().contains(this.userID)
-                            || tempEntry.getAcceptor() == this.userID)
-                            && tempEntry.getState() == QuestQuery.COMPLETED) {      // 완료된 거래만 출력
-                        questMainLayout.getChildAt(i).setVisibility(LinearLayout.VISIBLE);
-                    } else {
-                        questMainLayout.getChildAt(i).setVisibility(LinearLayout.GONE);
-                    }
-                }
+            case R.id.button_continueQuest:
+                this.tableRefreshHandler.sendEmptyMessage(QuestQuery.ACCEPTED); // 진행중인
+                slideInit();
+                break;
+            case R.id.button_completeQuest:
+                this.tableRefreshHandler.sendEmptyMessage(QuestQuery.COMPLETED); // 완료된 거래만 출력
                 slideInit();
                 break;
             case R.id.button_charge_send:
@@ -298,13 +279,6 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.button_exit:
                 finish();
-                break;
-            case R.id.button_developer_test:
-                Intent chatIntent = new Intent(MainActivity.this, ChatRoom.class);
-                chatIntent.putExtra("myId", this.userID);
-                chatIntent.putExtra("otherId", (long) 123123);
-                startActivityForResult(chatIntent, CHAT_TEST);
-                slideInit();
                 break;
             default:
         }
@@ -366,9 +340,11 @@ public class MainActivity extends AppCompatActivity {
     public class RefreshTableTask extends AsyncTask<Void, Void, Void> {
 
         Location location = null;
+        int questStatus = 0;
 
-        public RefreshTableTask(Location gpsLocation) {
+        public RefreshTableTask(Location gpsLocation, int questStatus) {
             this.location = gpsLocation;
+            this.questStatus = questStatus;
             this.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
 
@@ -379,7 +355,8 @@ public class MainActivity extends AppCompatActivity {
                 HttpURLConnection conn = this.setConnection("http://168.188.127.175:3000/tables");
                 jsonObject = new JSONObject();
                 jsonObject.put("uid", userID);
-                jsonObject.put("tablePass", this.location != null ? "ordered" : "default");
+                jsonObject.put("ordered", (this.location != null && questStatus == QuestQuery.UPLOADED));
+                jsonObject.put("status", this.questStatus);
                 if (this.location != null) {
                     jsonObject.put("latitude", this.location.getLatitude());
                     jsonObject.put("longitude", this.location.getLongitude());
@@ -442,7 +419,6 @@ public class MainActivity extends AppCompatActivity {
 
         public void initQuestView(String result) {
             questMainLayout.removeAllViewsInLayout();
-            Log.i("result" , result);
             JSONArrayParser jsonArrayParser = new JSONArrayParser(result);
             ArrayList<LinkedHashMap<String, Object>> jsonList = jsonArrayParser.parse();
             for (int i = 0; i < jsonList.size(); i++) {
