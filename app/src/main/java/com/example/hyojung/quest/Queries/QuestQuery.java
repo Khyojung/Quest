@@ -6,10 +6,9 @@ import java.util.ArrayList;
 public class QuestQuery extends Query implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    public final static int CANCELED = -2, CREATED = -1, UPLOADED = 0, RESPONDED = 1, ACCEPTED = 2, COMPLETED = 3;
+    public final static int CANCELED = -2, CREATED = -1, UPLOADED = 0, ACCEPTED = 1, COMPLETED = 2;
     private Long questIndex;
     private Long requester, acceptor;
-    private ArrayList<Long> respondent = new ArrayList<Long>();
     private String title, area, reward, comment;
     private double[] coordinate = new double[2];
     private int state = 0;
@@ -21,18 +20,6 @@ public class QuestQuery extends Query implements Serializable {
 
     public void setQuestIndex(long index) {
         this.questIndex = index;
-    }
-
-    public void addRespondent(long respondent) {
-        this.respondent.add(respondent);
-        this.state = RESPONDED;
-    }
-
-    public void removeRespondent(Long respondent) {
-        this.respondent.remove(respondent);
-        if (this.respondent.isEmpty()) {
-            this.state = UPLOADED;
-        }
     }
 
     public void setAcceptor(long acceptor) {
@@ -80,10 +67,6 @@ public class QuestQuery extends Query implements Serializable {
     public long getRequester() {
         return this.requester;
     }
-
-    public ArrayList<Long> getRespondent() {
-            return this.respondent;
-        }
 
     public long getAcceptor() {
             return this.acceptor;
