@@ -1,9 +1,14 @@
 package com.example.hyojung.quest.Activity;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.support.design.widget.FloatingActionButton;
@@ -19,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.hyojung.quest.BitmapMaker;
+import com.example.hyojung.quest.GPSInfomation;
 import com.example.hyojung.quest.GlobalApplication;
 import com.example.hyojung.quest.JSON.JSONArrayParser;
 import com.example.hyojung.quest.Queries.QuestQuery;
@@ -51,11 +57,15 @@ public class MainActivity extends AppCompatActivity {
 
     LinearLayout questMainLayout;
     ArrayList<QuestEntryView> questList;
-    int questCount = 3;
     FloatingActionButton fab;
 
     long userID;
     String kakaoNickName, profileImagePath;
+
+    GPSInfomation gpsInfomation;
+    private boolean isAccessFineLocation = false;
+    private boolean isAccessCoarseLocation = false;
+    private boolean isPermission = false;
 
     TextView profileNickName;
     Bitmap bitmap_kakao, bitmap_spare;
@@ -68,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void handleMessage(Message message) {
             if (message.what == REFRESH_TABLE) {
-                new RefreshTableTask();
+                new RefreshTableTask(gpsInfomation.getUserLocation());
             }
         }
     };
@@ -79,7 +89,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         GlobalApplication.setCurrentActivity(this);
-
+        this.callPermission();
+        if (this.isPermission) {
+            gpsInfomation = new GPSInfomation(MainActivity.this);
+        }
+        else {
+            Log.i("warnlog", "권한 없음");
+        }
         if (!this.loginCheck(getIntent())) {
             Toast.makeText(this, "로그인에 문제가 발생하였습니다.", Toast.LENGTH_LONG).show();
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
@@ -303,13 +319,56 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                                           int[] grantResults) {
+        if (requestCode == 1000
+                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            isAccessFineLocation = true;
+
+        } else if (requestCode == 1001
+                && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+            isAccessCoarseLocation = true;
+        }
+
+        if (isAccessFineLocation && isAccessCoarseLocation) {
+            isPermission = true;
+        }
+    }
+
+    // 전화번호 권한 요청
+    private void callPermission() {
+        // Check the SDK version and whether the permission is already granted or not.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+                && checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            requestPermissions(
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    1000);
+
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+                && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            requestPermissions(
+                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                    1001);
+        } else {
+            isPermission = true;
+        }
+    }
+
+    @Override
     public void onBackPressed() {
         finish();
     }
 
     public class RefreshTableTask extends AsyncTask<Void, Void, Void> {
 
-        public RefreshTableTask() {
+        Location location = null;
+
+        public RefreshTableTask(Location gpsLocation) {
+            this.location = gpsLocation;
             this.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
 
@@ -320,7 +379,12 @@ public class MainActivity extends AppCompatActivity {
                 HttpURLConnection conn = this.setConnection("http://168.188.127.175:3000/tables");
                 jsonObject = new JSONObject();
                 jsonObject.put("uid", userID);
-                jsonObject.put("tablePass", "request quest tables");
+                jsonObject.put("tablePass", this.location != null ? "ordered" : "default");
+                if (this.location != null) {
+                    jsonObject.put("latitude", this.location.getLatitude());
+                    jsonObject.put("longitude", this.location.getLongitude());
+                }
+
                 this.sendJSONObject(conn, jsonObject);
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
                 StringBuilder stringBuilder = new StringBuilder();
