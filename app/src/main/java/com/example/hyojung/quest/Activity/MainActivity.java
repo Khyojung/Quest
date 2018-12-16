@@ -6,16 +6,15 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -54,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static final int MODIFY_USER_INFO = 0, ADD_QUEST = 1, VIEW_QUEST = 2, CHECK_KAKAO_PAY = 3, CHAT_TEST = 4;
 
+    SwipeRefreshLayout swipeRefreshLayout;
     LinearLayout questMainLayout;
     ArrayList<QuestEntryView> questList;
     FloatingActionButton fab;
@@ -97,7 +97,14 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         }
-
+        swipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.swipe_layout);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                tableRefreshHandler.sendEmptyMessage(QuestQuery.UPLOADED);
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
         questMainLayout = (LinearLayout) findViewById(R.id.quest_main_layout);
         fab = (FloatingActionButton) findViewById(R.id.fab);
 
