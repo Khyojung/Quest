@@ -168,7 +168,9 @@ public class MainActivity extends AppCompatActivity {
                     QuestQuery beUpdatedQuest = (QuestQuery) data.getSerializableExtra("resultUpdate");
                     new JSONSendTask(beUpdatedQuest, tableRefreshHandler);
                 }
-                tableRefreshHandler.sendEmptyMessage(QuestQuery.UPLOADED);
+                else {
+                    tableRefreshHandler.sendEmptyMessage(QuestQuery.UPLOADED);
+                }
                 break;
             case CHECK_KAKAO_PAY:
                 if (resultCode == CheckKakaoPay.EXIT) {
@@ -236,7 +238,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void viewQuestEntry(QuestQuery questQuery) {
-        Intent intent = new Intent(getApplicationContext(), ViewQuest.class);
+        Intent intent = new Intent(MainActivity.this, ViewQuest.class);
         intent.putExtra("entry", questQuery);
         intent.putExtra("viewerId", userID);
         this.startActivityForResult(intent, VIEW_QUEST);
@@ -425,6 +427,7 @@ public class MainActivity extends AppCompatActivity {
                 HashMap<String, Object> tableEntry = jsonList.get(i);
                 QuestQuery questEntry = new QuestQuery((Long) tableEntry.get("quester"));
                 questEntry.setQuestIndex((Long) tableEntry.get("tid"));
+                questEntry.setAcceptor((Long) tableEntry.get("questee"));
                 questEntry.setQuestInfo((String) tableEntry.get("title")
                         , (String) tableEntry.get("place")
                         , String.valueOf(tableEntry.get("pay"))
@@ -438,16 +441,14 @@ public class MainActivity extends AppCompatActivity {
                 }
                 questEntry.setPosition(new double[] {(Double)latitude, (Double)longitude});
                 questEntry.setState(((Long) tableEntry.get("state")).intValue());
-                if (questEntry.getState() != QuestQuery.CANCELED) {
-                    QuestEntryView newQuestEntryView = new QuestEntryView(getApplicationContext(), questEntry);
-                    newQuestEntryView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            viewQuestEntry(((QuestEntryView) v).getQuestQuery());
-                        }
-                    });
-                    addQuestEntryIntoViewAndList(newQuestEntryView);
-                }
+                QuestEntryView newQuestEntryView = new QuestEntryView(getApplicationContext(), questEntry);
+                newQuestEntryView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        viewQuestEntry(((QuestEntryView) v).getQuestQuery());
+                    }
+                });
+                addQuestEntryIntoViewAndList(newQuestEntryView);
             }
         }
     }

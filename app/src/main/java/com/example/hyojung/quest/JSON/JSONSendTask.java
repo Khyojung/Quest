@@ -2,6 +2,7 @@ package com.example.hyojung.quest.JSON;
 
 import android.os.AsyncTask;
 import android.os.Handler;
+import android.util.Log;
 
 import com.example.hyojung.quest.Activity.MainActivity;
 import com.example.hyojung.quest.Queries.ChatQuery;
@@ -114,10 +115,11 @@ public class JSONSendTask extends AsyncTask<Void, Void, Void> {
                     route = "/updateQuest";
                     break;
             }
+            Log.i("testtest", urlString + route);
             conn = this.setConnection(urlString + route);
             try {
                 ArrayList<String> questInfo = clientQuestQuery.getQuestInfo();
-                if (!(clientQuestQuery.getState() == QuestQuery.UPLOADED)) {
+                if (clientQuestQuery.getState() != QuestQuery.UPLOADED) {
                     jsonObject.put("tid", clientQuestQuery.getQuestIndex());
                     jsonObject.put("questee", clientQuestQuery.getAcceptor());
                 }
