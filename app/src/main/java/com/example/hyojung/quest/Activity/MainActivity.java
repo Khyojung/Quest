@@ -164,9 +164,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 break;
             case VIEW_QUEST:
-                Log.i("testtest", String.valueOf(resultCode));
                 if (resultCode != ViewQuest.BACK_PRESSED) {
-                    Log.i("testtest", "변경값 전송");
                     QuestQuery beUpdatedQuest = (QuestQuery) data.getSerializableExtra("resultUpdate");
                     new JSONSendTask(beUpdatedQuest, tableRefreshHandler);
                 }
