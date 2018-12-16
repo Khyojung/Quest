@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -19,7 +18,6 @@ import com.example.hyojung.quest.R;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.io.PrintWriter;
 
 public class ModifyUserInfo extends AppCompatActivity {
 
