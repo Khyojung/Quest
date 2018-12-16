@@ -1,4 +1,4 @@
-package com.example.hyojung.quest.Activity;
+package com.hyojung.quest.Activity;
 
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -12,16 +12,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.example.hyojung.quest.GlobalApplication;
-import com.example.hyojung.quest.Queries.LoginQuery;
-import com.example.hyojung.quest.JSON.JSONSendTask;
+import com.hyojung.quest.GlobalApplication;
+import com.hyojung.quest.Queries.LoginQuery;
+import com.hyojung.quest.JSON.JSONSendTask;
 import com.example.hyojung.quest.R;
 import com.kakao.auth.AuthType;
 import com.kakao.auth.ISessionCallback;
 import com.kakao.auth.Session;
 import com.kakao.network.ErrorResult;
 import com.kakao.usermgmt.UserManagement;
-import com.kakao.usermgmt.callback.LogoutResponseCallback;
 import com.kakao.usermgmt.callback.MeResponseCallback;
 import com.kakao.usermgmt.response.model.UserProfile;
 import com.kakao.util.exception.KakaoException;

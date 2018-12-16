@@ -1,4 +1,4 @@
-package com.example.hyojung.quest.JSON;
+package com.hyojung.quest.JSON;
 
 import android.util.Log;
 

@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.hyojung.quest">
+    package="com.example.hyojung.quest"
+    android:versionCode="2"
+    android:versionName="1.0.1">
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="com.android.vending.BILLING"/>
 
     <application
-        android:name=".GlobalApplication"
+        android:name="com.hyojung.quest.GlobalApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -16,7 +19,7 @@
         android:supportsRtl="true"
         android:usesCleartextTraffic="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activity.LoginActivity"
+        <activity android:name="com.hyojung.quest.Activity.LoginActivity"
             android:noHistory="true">
 
             <intent-filter>
@@ -26,39 +29,35 @@
         </activity>
 
         <activity
-            android:name=".Activity.MainActivity"
+            android:name="com.hyojung.quest.Activity.MainActivity"
             android:label="MainActivity">
         </activity>
 
         <activity
-            android:name=".Activity.AddQuest"
+            android:name="com.hyojung.quest.Activity.AddQuest"
             android:label="AddQuest">
         </activity>
 
-        <activity android:name=".Activity.AddPositionActivity"
+        <activity android:name="com.hyojung.quest.Activity.AddPositionActivity"
             android:label="AddPositionActivity">
         </activity>
 
         <activity
-            android:name=".Activity.ViewQuest"
+            android:name="com.hyojung.quest.Activity.ViewQuest"
             android:label="ViewQuest">
         </activity>
 
         <activity
-            android:name=".Activity.ModifyUserInfo"
+            android:name="com.hyojung.quest.Activity.ModifyUserInfo"
             android:label="ModifyUserInfo">
         </activity>
 
         <activity
-            android:name=".Activity.CheckKakaoPay"
-            android:label="CheckKakaoPay"/>
+            android:name="com.hyojung.quest.Activity.InAppPayment"
+            android:label="InAppPayment"/>
 
         <activity
-            android:name=".Activity.PayProcess"
-            android:label="PayProcess"/>
-
-        <activity
-            android:name=".Activity.ChatRoom"
+            android:name="com.hyojung.quest.Activity.ChatRoom"
             android:label="ChatRoom"/>
 
         <meta-data
@@ -66,7 +65,7 @@
             android:value="@string/kakao_app_key" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAnIwIc8AKwA-lF_URU7WyZxnMiptES0mA"/>
+            android:value="AIzaSyDjFegTt4euvXtyHg_7AgTIdEF4qv3z-eo"/>
     </application>
 
 

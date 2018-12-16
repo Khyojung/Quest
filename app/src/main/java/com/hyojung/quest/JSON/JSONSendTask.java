@@ -1,14 +1,14 @@
-package com.example.hyojung.quest.JSON;
+package com.hyojung.quest.JSON;
 
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.util.Log;
 
-import com.example.hyojung.quest.Activity.MainActivity;
-import com.example.hyojung.quest.Queries.ChatQuery;
-import com.example.hyojung.quest.Queries.LoginQuery;
-import com.example.hyojung.quest.Queries.Query;
-import com.example.hyojung.quest.Queries.QuestQuery;
+import com.hyojung.quest.Queries.ChatQuery;
+import com.hyojung.quest.Queries.LoginQuery;
+import com.hyojung.quest.Queries.PointQuery;
+import com.hyojung.quest.Queries.Query;
+import com.hyojung.quest.Queries.QuestQuery;
 
 
 import org.json.JSONException;
@@ -28,7 +28,8 @@ public class JSONSendTask extends AsyncTask<Void, Void, Void> {
 
     Query query;
     String urlString = "http://168.188.127.175:3000";
-    Handler handler;
+    Handler handler = null;
+    String resultJsonString;
 
     public JSONSendTask(Query query) {
         this.query = query;
@@ -39,6 +40,10 @@ public class JSONSendTask extends AsyncTask<Void, Void, Void> {
         this.query = query;
         this.handler = postHandler;
         this.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    public String getResultJsonString() {
+        return this.resultJsonString;
     }
 
     private HttpURLConnection setConnection(String string) {
@@ -61,7 +66,7 @@ public class JSONSendTask extends AsyncTask<Void, Void, Void> {
         return conn;
     }
 
-    private String sendJSONObject(HttpURLConnection conn, JSONObject jsonObject) {
+    private void sendJSONObject(HttpURLConnection conn, JSONObject jsonObject) {
         String result = "";
         try {
             OutputStreamWriter dataOutputStream = new OutputStreamWriter(conn.getOutputStream(), "UTF-8");
@@ -80,10 +85,13 @@ public class JSONSendTask extends AsyncTask<Void, Void, Void> {
             if (result.equals("CANCELED") || result.equals("UPDATED")) {
                 handler.sendEmptyMessage(QuestQuery.UPLOADED);
             }
+            else if (handler != null) {
+                this.resultJsonString = result;
+                handler.sendEmptyMessage(0);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return result;
     }
 
     @Override
@@ -109,7 +117,7 @@ public class JSONSendTask extends AsyncTask<Void, Void, Void> {
                 case QuestQuery.UPLOADED:
                     route = "/addQuest";
                     break;
-                case QuestQuery.CANCELED:
+                case QuestQuery.DESTROYED:
                 case QuestQuery.ACCEPTED:
                 case QuestQuery.COMPLETED:
                     route = "/updateQuest";
@@ -121,7 +129,8 @@ public class JSONSendTask extends AsyncTask<Void, Void, Void> {
                 ArrayList<String> questInfo = clientQuestQuery.getQuestInfo();
                 if (clientQuestQuery.getState() != QuestQuery.UPLOADED) {
                     jsonObject.put("tid", clientQuestQuery.getQuestIndex());
-                    jsonObject.put("questee", clientQuestQuery.getAcceptor());
+                    jsonObject.put("questee", clientQuestQuery.getQuestee());
+                    jsonObject.put("questee_state", clientQuestQuery.getQuesteeState());
                 }
                 jsonObject.put("title", questInfo.get(0));
                 jsonObject.put("place", questInfo.get(1));
@@ -129,8 +138,9 @@ public class JSONSendTask extends AsyncTask<Void, Void, Void> {
                 jsonObject.put("latitude", clientQuestQuery.getPosition()[0]);
                 jsonObject.put("longitude", clientQuestQuery.getPosition()[1]);
                 jsonObject.put("comment", questInfo.get(3));
-                jsonObject.put("requester", clientQuestQuery.getRequester());
+                jsonObject.put("quester", clientQuestQuery.getQuester());
                 jsonObject.put("state", clientQuestQuery.getState());
+                jsonObject.put("quester_state", clientQuestQuery.getQuesterState());
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -147,7 +157,19 @@ public class JSONSendTask extends AsyncTask<Void, Void, Void> {
                 e.printStackTrace();
             }
         }
+        else if (query instanceof PointQuery) {
+            PointQuery pointChargeQuery = (PointQuery)query;
+            conn = this.setConnection(urlString + "/userPoint");
+            try {
+                jsonObject.put("id", pointChargeQuery.getKakaoID());
+                jsonObject.put("charge", pointChargeQuery.getAddPoint());
+                jsonObject.put("queryNumber", pointChargeQuery.getQueryNumber());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
         this.sendJSONObject(conn, jsonObject);
         return null;
     }
+
 }

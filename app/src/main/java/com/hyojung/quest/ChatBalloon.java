@@ -1,4 +1,4 @@
-package com.example.hyojung.quest;
+package com.hyojung.quest;
 
 import android.content.Context;
 import android.view.Gravity;
@@ -8,6 +8,8 @@ import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.example.hyojung.quest.R;
 
 import java.util.ArrayList;
 import java.util.Date;

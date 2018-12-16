@@ -1,4 +1,4 @@
-package com.example.hyojung.quest.Activity;
+package com.hyojung.quest.Activity;
 
 import android.Manifest;
 import android.content.Intent;
@@ -22,13 +22,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.hyojung.quest.BitmapMaker;
-import com.example.hyojung.quest.GPSInfomation;
-import com.example.hyojung.quest.GlobalApplication;
-import com.example.hyojung.quest.JSON.JSONArrayParser;
-import com.example.hyojung.quest.Queries.QuestQuery;
-import com.example.hyojung.quest.JSON.JSONSendTask;
-import com.example.hyojung.quest.QuestEntryView;
+import com.hyojung.quest.BitmapMaker;
+import com.hyojung.quest.GPSInfomation;
+import com.hyojung.quest.GlobalApplication;
+import com.hyojung.quest.JSON.JSONArrayParser;
+import com.hyojung.quest.Queries.QuestQuery;
+import com.hyojung.quest.JSON.JSONSendTask;
+import com.hyojung.quest.QuestEntryView;
 import com.example.hyojung.quest.R;
 import com.kakao.usermgmt.UserManagement;
 import com.kakao.usermgmt.callback.LogoutResponseCallback;
@@ -51,7 +51,7 @@ import java.util.LinkedHashMap;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final int MODIFY_USER_INFO = 0, ADD_QUEST = 1, VIEW_QUEST = 2, CHECK_KAKAO_PAY = 3, CHAT_TEST = 4;
+    public static final int MODIFY_USER_INFO = 0, ADD_QUEST = 1, VIEW_QUEST = 2, IN_APP_PAY = 3, CHAT_TEST = 4;
 
     SwipeRefreshLayout swipeRefreshLayout;
     LinearLayout questMainLayout;
@@ -97,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         }
+
         swipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.swipe_layout);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -109,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
         fab = (FloatingActionButton) findViewById(R.id.fab);
 
         tableRefreshHandler.sendEmptyMessage(QuestQuery.UPLOADED);
+
         if (this.userID != 0) {
             this.setProfile();
         }
@@ -158,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
                             , data.getStringExtra("Reward")
                             , data.getStringExtra("Comment"));
                     newQuestQuery.setPosition(data.getDoubleArrayExtra("Position"));
-                    newQuestQuery.setState(QuestQuery.UPLOADED);
+                    newQuestQuery.setState(userID, QuestQuery.CONTINUING);
                     new JSONSendTask(newQuestQuery);
                     QuestEntryView newQuestEntryView = new QuestEntryView(getApplicationContext(), newQuestQuery);
                     newQuestEntryView.setOnClickListener(new View.OnClickListener() {
@@ -179,8 +181,8 @@ public class MainActivity extends AppCompatActivity {
                     tableRefreshHandler.sendEmptyMessage(QuestQuery.UPLOADED);
                 }
                 break;
-            case CHECK_KAKAO_PAY:
-                if (resultCode == CheckKakaoPay.EXIT) {
+            case IN_APP_PAY:
+                if (resultCode == InAppPayment.EXIT) {
 
                 }
                 break;
@@ -272,8 +274,8 @@ public class MainActivity extends AppCompatActivity {
                 slideInit();
                 break;
             case R.id.button_charge_send:
-                Intent payIntent = new Intent(MainActivity.this, CheckKakaoPay.class);
-                startActivityForResult(payIntent, CHECK_KAKAO_PAY);
+                Intent payIntent = new Intent(MainActivity.this, InAppPayment.class);
+                startActivityForResult(payIntent, IN_APP_PAY);
                 slideInit();
                 break;
             case R.id.button_logout:
@@ -433,9 +435,12 @@ public class MainActivity extends AppCompatActivity {
             for (int i = 0; i < jsonList.size(); i++) {
                 HashMap<String, Object> tableEntry = jsonList.get(i);
                 QuestQuery questEntry = new QuestQuery((Long) tableEntry.get("quester"));
+                questEntry.setState(questEntry.getQuester(), ((Long) tableEntry.get("quester_state")).intValue());
+                if (tableEntry.get("questee") != null) {
+                    questEntry.setQuestee((Long) tableEntry.get("questee"));
+                    questEntry.setState(questEntry.getQuestee(), ((Long) tableEntry.get("questee_state")).intValue());
+                }
                 questEntry.setQuestIndex((Long) tableEntry.get("tid"));
-                if (tableEntry.get("questee") != null)
-                    questEntry.setAcceptor((Long) tableEntry.get("questee"));
                 questEntry.setQuestInfo((String) tableEntry.get("title")
                         , (String) tableEntry.get("place")
                         , String.valueOf(tableEntry.get("pay"))
@@ -448,7 +453,7 @@ public class MainActivity extends AppCompatActivity {
                     longitude = ((Long)longitude).doubleValue();
                 }
                 questEntry.setPosition(new double[] {(Double)latitude, (Double)longitude});
-                questEntry.setState(((Long) tableEntry.get("state")).intValue());
+
                 QuestEntryView newQuestEntryView = new QuestEntryView(getApplicationContext(), questEntry);
                 newQuestEntryView.setOnClickListener(new View.OnClickListener() {
                     @Override

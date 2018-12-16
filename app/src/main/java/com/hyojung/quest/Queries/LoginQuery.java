@@ -1,4 +1,4 @@
-package com.example.hyojung.quest.Queries;
+package com.hyojung.quest.Queries;
 
 public class LoginQuery extends Query {
     private static final long serialVersionUID = 23;

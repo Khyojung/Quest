@@ -1,4 +1,4 @@
-package com.example.hyojung.quest.Activity;
+package com.hyojung.quest.Activity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -13,7 +13,7 @@ import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import com.example.hyojung.quest.BitmapMaker;
+import com.hyojung.quest.BitmapMaker;
 import com.example.hyojung.quest.R;
 
 import java.io.FileNotFoundException;

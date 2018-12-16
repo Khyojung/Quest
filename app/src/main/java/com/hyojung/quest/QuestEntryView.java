@@ -1,4 +1,4 @@
-package com.example.hyojung.quest;
+package com.hyojung.quest;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -6,7 +6,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 
-import com.example.hyojung.quest.Queries.QuestQuery;
+import com.hyojung.quest.Queries.QuestQuery;
+import com.example.hyojung.quest.R;
 
 import java.util.ArrayList;
 

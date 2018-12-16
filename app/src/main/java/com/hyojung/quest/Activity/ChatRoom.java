@@ -1,4 +1,4 @@
-package com.example.hyojung.quest.Activity;
+package com.hyojung.quest.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,8 +11,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
-import com.example.hyojung.quest.ChatBalloon;
-import com.example.hyojung.quest.ChatLog;
+import com.hyojung.quest.ChatBalloon;
+import com.hyojung.quest.ChatLog;
 import com.example.hyojung.quest.R;
 
 public class ChatRoom extends AppCompatActivity {

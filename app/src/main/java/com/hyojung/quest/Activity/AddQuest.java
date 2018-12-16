@@ -1,19 +1,13 @@
-package com.example.hyojung.quest.Activity;
+package com.hyojung.quest.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Html;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.example.hyojung.quest.R;
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.ui.PlacePicker;
 
 public class AddQuest extends AppCompatActivity {
 
