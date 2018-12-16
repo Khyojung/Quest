@@ -3,6 +3,7 @@ package com.example.hyojung.quest.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -17,7 +18,7 @@ import static com.example.hyojung.quest.Activity.MainActivity.CHAT_TEST;
 public class ViewQuest extends AppCompatActivity {
 
     final public static int QUEST_DESTROYED = 10, QUEST_REQUEST_CANCELED = 11, QUEST_ACCEPTED = 12,
-            QUEST_COMPLETED = 13, BACK_PRESSED = 13;
+            QUEST_COMPLETED = 13, BACK_PRESSED = 14;
 
     long viewerId;
     QuestQuery viewingEntry;
