@@ -8,11 +8,10 @@ import java.util.ArrayList;
 public class QuestQuery extends Query implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    public final static int DESTROYED = -2, CREATED = -1, UPLOADED = 0, ACCEPTED = 1, COMPLETED = 2;
+    public final static int DESTROYED = 0, CREATED = 1, UPLOADED = 2, ACCEPTED = 3, COMPLETED = 4;
     public final static int NOT_UPDATED = 0, CONTINUING = 1, DESTROY_AGREED = 2, COMPLETE_AGREED = 3;
 
-    private Long questIndex;
-    private Long quester, questee;
+    private Long questIndex, quester, questee;
 
     private String title, area, reward, comment;
     private double[] coordinate = new double[2];
@@ -20,17 +19,17 @@ public class QuestQuery extends Query implements Serializable {
 
     private int quester_state, questee_state = NOT_UPDATED;
 
-    public QuestQuery(long quester) {
+    public QuestQuery(Long quester) {
         this.quester = quester;
         this.state = CREATED;
         this.stateRefresh();
     }
 
-    public void setQuestIndex(long index) {
+    public void setQuestIndex(Long index) {
         this.questIndex = index;
     }
 
-    public void setQuestee(long questee) {
+    public void setQuestee(Long questee) {
         this.questee = questee;
         this.state = ACCEPTED;
         this.questee_state = CONTINUING;
