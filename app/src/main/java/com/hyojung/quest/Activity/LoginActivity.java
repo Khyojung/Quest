@@ -37,7 +37,6 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
-
         GlobalApplication.setCurrentActivity(this);
         instance = this;
         callback = new SessionCallback();
@@ -96,7 +95,6 @@ public class LoginActivity extends AppCompatActivity {
 
         @Override
         public void onSessionOpenFailed(KakaoException exception) {
-            Toast.makeText(instance, "로그아웃", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -109,7 +107,7 @@ public class LoginActivity extends AppCompatActivity {
                 md = MessageDigest.getInstance("SHA");
                 md.update(signature.toByteArray());
                 String something = new String(Base64.encode(md.digest(), 0));
-                Log.e("Hash key", something);
+                Log.i("Hash key", something);
             }
         } catch (Exception e) {
             Log.e("name not found", e.toString());
