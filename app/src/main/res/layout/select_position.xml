@@ -35,6 +35,6 @@
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        tools:context="com.example.hyojung.quest.Activity.AddPositionActivity"
+        tools:context="com.example.hyojung.quest.com.hyojung.quest.Activity.AddPositionActivity"
         android:layout_weight="1" />
 </LinearLayout>
