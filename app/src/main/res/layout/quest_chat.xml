@@ -43,8 +43,9 @@
             android:layout_height="50dp"
             android:layout_weight="1"
             android:fontFamily="@font/work"
-            android:textSize="15dp"
-            android:text="전송"
+            android:textSize="20dp"
+            android:textColor="#383838"
+            android:text="SEND"
             android:background="@drawable/button_full"
             android:onClick="onClick"/>
         </LinearLayout>

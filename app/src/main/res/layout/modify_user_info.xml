@@ -184,23 +184,42 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
+                    <android.support.constraint.ConstraintLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="4">
 
-                    <EditText
-                        android:id="@+id/textbox_edit_nickname"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:ems="10"
-                        android:hint="대체 닉네임 설정"
-                        android:inputType="textPersonName" />
+                        <EditText
+                            android:id="@+id/textbox_edit_nickname"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:background="#0000000"
+                            android:ems="10"
+                            android:fontFamily="@font/work"
+                            android:hint="대체 닉네임 설정"
+                            android:inputType="textPersonName"
+                            app:layout_constraintBottom_toTopOf="@+id/imageView6" />
+
+                        <ImageView
+                            android:id="@+id/imageView6"
+                            android:layout_width="match_parent"
+                            android:layout_height="20dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/gray_underbar"
+                            app:layout_constraintBottom_toBottomOf="parent" />
+
+                    </android.support.constraint.ConstraintLayout>
+
 
                     <Button
+                        android:fontFamily="@font/work"
                         android:id="@+id/button_submit_name"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:background="@drawable/button_xml"
-                        android:text="닉네임 변경" />
+                        android:text="수정" />
                 </LinearLayout>
         </LinearLayout>
 
@@ -250,10 +269,12 @@
                             android:text="카카오 프로필 사진" />
 
                         <ImageView
+                            android:background="@drawable/round_tool"
                             android:id="@+id/image_kakao_profile"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:layout_marginRight="2dp"
                             tools:srcCompat="@tools:sample/avatars" />
                     </LinearLayout>
 
@@ -269,6 +290,8 @@
                             android:text="대체 프로필 사진" />
 
                         <ImageView
+                            android:layout_marginLeft="2dp"
+                            android:background="@drawable/round_tool"
                             android:id="@+id/image_spare_profile"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
