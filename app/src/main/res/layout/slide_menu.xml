@@ -11,6 +11,8 @@
     android:weightSum="100">
 
     <ScrollView
+        android:scrollbarSize="2dp"
+        android:scrollbarThumbVertical="@color/simple"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -23,7 +25,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10sp"
-                android:background="#EEEEEE"
+                android:padding="2dp"
+                android:background="@drawable/red_tool"
                 android:orientation="vertical">
 
                 <ImageView
@@ -39,60 +42,73 @@
                     android:layout_marginBottom="10sp"
                     android:gravity="center"
                     android:textSize="20sp"
+                    android:fontFamily="@font/work"
                     android:textStyle="bold" />
 
             </LinearLayout>
 
             <Button
+                android:fontFamily="@font/work"
+                android:layout_margin="5dp"
                 android:id="@+id/button_userinfomodify"
                 android:layout_width="match_parent"
                 android:layout_height="60sp"
-                android:background="@drawable/menubutton"
+                android:background="@drawable/button_tool"
                 android:onClick="onClickedInMenu"
                 android:text="개인 정보 수정"
                 android:textSize="20sp" />
 
             <Button
+                android:fontFamily="@font/work"
+                android:layout_margin="5dp"
                 android:id="@+id/button_uploadedQuest"
                 android:layout_width="match_parent"
                 android:layout_height="60sp"
-                android:background="@drawable/menubutton"
+                android:background="@drawable/button_tool"
                 android:onClick="onClickedInMenu"
                 android:text="수락 가능 목록"
                 android:textSize="20sp" />
 
             <Button
+                android:fontFamily="@font/work"
+                android:layout_margin="5dp"
                 android:id="@+id/button_continueQuest"
                 android:layout_width="match_parent"
                 android:layout_height="60sp"
-                android:background="@drawable/menubutton"
+                android:background="@drawable/button_tool"
                 android:onClick="onClickedInMenu"
                 android:text="진행중 목록"
                 android:textSize="20sp" />
 
             <Button
+                android:fontFamily="@font/work"
+                android:layout_margin="5dp"
                 android:id="@+id/button_completeQuest"
                 android:layout_width="match_parent"
                 android:layout_height="60sp"
-                android:background="@drawable/menubutton"
+                android:background="@drawable/button_tool"
                 android:onClick="onClickedInMenu"
                 android:text="거래 완료 목록"
                 android:textSize="20sp" />
 
             <Button
+                android:fontFamily="@font/work"
+                android:layout_margin="5dp"
                 android:id="@+id/button_charge_send"
                 android:layout_width="match_parent"
                 android:layout_height="60sp"
-                android:background="@drawable/menubutton"
+                android:background="@drawable/button_tool"
                 android:onClick="onClickedInMenu"
                 android:text="충전 / 송금"
                 android:textSize="20sp" />
 
             <Button
+                android:fontFamily="@font/work"
+                android:layout_margin="5dp"
                 android:id="@+id/button_logout"
                 android:layout_width="match_parent"
                 android:layout_height="60sp"
-                android:background="@drawable/menubutton"
+                android:background="@drawable/button_tool"
                 android:onClick="onClickedInMenu"
                 android:text="로그아웃"
                 android:textSize="20sp" />
@@ -101,9 +117,10 @@
                 android:id="@+id/button_exit"
                 android:layout_width="match_parent"
                 android:layout_height="60sp"
-                android:background="@drawable/menubutton"
+                android:background="@drawable/button_tool"
                 android:onClick="onClickedInMenu"
                 android:text="나가기"
+                android:fontFamily="@font/work"
                 android:textSize="20sp" />
 
         </LinearLayout>
