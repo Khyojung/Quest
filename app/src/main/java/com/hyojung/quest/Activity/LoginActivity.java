@@ -1,4 +1,4 @@
-package com.example.hyojung.quest.Activity;
+package com.hyojung.quest.Activity;
 
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -12,16 +12,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.example.hyojung.quest.GlobalApplication;
-import com.example.hyojung.quest.Queries.LoginQuery;
-import com.example.hyojung.quest.JSON.JSONSendTask;
+import com.hyojung.quest.GlobalApplication;
+import com.hyojung.quest.Queries.LoginQuery;
+import com.hyojung.quest.JSON.JSONSendTask;
 import com.example.hyojung.quest.R;
 import com.kakao.auth.AuthType;
 import com.kakao.auth.ISessionCallback;
 import com.kakao.auth.Session;
 import com.kakao.network.ErrorResult;
 import com.kakao.usermgmt.UserManagement;
-import com.kakao.usermgmt.callback.LogoutResponseCallback;
 import com.kakao.usermgmt.callback.MeResponseCallback;
 import com.kakao.usermgmt.response.model.UserProfile;
 import com.kakao.util.exception.KakaoException;
@@ -38,7 +37,6 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
-
         GlobalApplication.setCurrentActivity(this);
         instance = this;
         callback = new SessionCallback();
@@ -49,7 +47,7 @@ public class LoginActivity extends AppCompatActivity {
         button_adminAccess.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LoginQuery clientLoginQuery = new LoginQuery(0, "관리자", "관리자");
+                LoginQuery clientLoginQuery = new LoginQuery((long)0, "관리자", "관리자");
                 Intent intent = new Intent(instance, MainActivity.class);
                 intent.putExtra("kakaoID", (long)0);
                 intent.putExtra("kakaoNickName", "관리자");
@@ -97,7 +95,6 @@ public class LoginActivity extends AppCompatActivity {
 
         @Override
         public void onSessionOpenFailed(KakaoException exception) {
-            Toast.makeText(instance, "로그아웃", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -110,7 +107,7 @@ public class LoginActivity extends AppCompatActivity {
                 md = MessageDigest.getInstance("SHA");
                 md.update(signature.toByteArray());
                 String something = new String(Base64.encode(md.digest(), 0));
-                Log.e("Hash key", something);
+                Log.i("Hash key", something);
             }
         } catch (Exception e) {
             Log.e("name not found", e.toString());

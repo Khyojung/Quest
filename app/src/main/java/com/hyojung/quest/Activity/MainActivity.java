@@ -1,4 +1,4 @@
-package com.example.hyojung.quest.Activity;
+package com.hyojung.quest.Activity;
 
 import android.Manifest;
 import android.content.Intent;
@@ -6,16 +6,15 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -23,13 +22,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.hyojung.quest.BitmapMaker;
-import com.example.hyojung.quest.GPSInfomation;
-import com.example.hyojung.quest.GlobalApplication;
-import com.example.hyojung.quest.JSON.JSONArrayParser;
-import com.example.hyojung.quest.Queries.QuestQuery;
-import com.example.hyojung.quest.JSON.JSONSendTask;
-import com.example.hyojung.quest.QuestEntryView;
+import com.hyojung.quest.BitmapMaker;
+import com.hyojung.quest.GPSInfomation;
+import com.hyojung.quest.GlobalApplication;
+import com.hyojung.quest.JSON.JSONArrayParser;
+import com.hyojung.quest.Queries.QuestQuery;
+import com.hyojung.quest.JSON.JSONSendTask;
+import com.hyojung.quest.QuestEntryView;
 import com.example.hyojung.quest.R;
 import com.kakao.usermgmt.UserManagement;
 import com.kakao.usermgmt.callback.LogoutResponseCallback;
@@ -52,8 +51,9 @@ import java.util.LinkedHashMap;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final int MODIFY_USER_INFO = 0, ADD_QUEST = 1, VIEW_QUEST = 2, CHECK_KAKAO_PAY = 3, CHAT_TEST = 4;
+    public static final int MODIFY_USER_INFO = 0, ADD_QUEST = 1, VIEW_QUEST = 2, IN_APP_PAY = 3, CHAT_TEST = 4;
 
+    SwipeRefreshLayout swipeRefreshLayout;
     LinearLayout questMainLayout;
     ArrayList<QuestEntryView> questList;
     FloatingActionButton fab;
@@ -98,10 +98,19 @@ public class MainActivity extends AppCompatActivity {
             finish();
         }
 
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_layout);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                tableRefreshHandler.sendEmptyMessage(QuestQuery.UPLOADED);
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
         questMainLayout = (LinearLayout) findViewById(R.id.quest_main_layout);
         fab = (FloatingActionButton) findViewById(R.id.fab);
 
         tableRefreshHandler.sendEmptyMessage(QuestQuery.UPLOADED);
+
         if (this.userID != 0) {
             this.setProfile();
         }
@@ -151,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
                             , data.getStringExtra("Reward")
                             , data.getStringExtra("Comment"));
                     newQuestQuery.setPosition(data.getDoubleArrayExtra("Position"));
-                    newQuestQuery.setState(QuestQuery.UPLOADED);
+                    newQuestQuery.setState(userID, QuestQuery.CONTINUING);
                     new JSONSendTask(newQuestQuery);
                     QuestEntryView newQuestEntryView = new QuestEntryView(getApplicationContext(), newQuestQuery);
                     newQuestEntryView.setOnClickListener(new View.OnClickListener() {
@@ -167,13 +176,12 @@ public class MainActivity extends AppCompatActivity {
                 if (resultCode != ViewQuest.BACK_PRESSED) {
                     QuestQuery beUpdatedQuest = (QuestQuery) data.getSerializableExtra("resultUpdate");
                     new JSONSendTask(beUpdatedQuest, tableRefreshHandler);
-                }
-                else {
+                } else {
                     tableRefreshHandler.sendEmptyMessage(QuestQuery.UPLOADED);
                 }
                 break;
-            case CHECK_KAKAO_PAY:
-                if (resultCode == CheckKakaoPay.EXIT) {
+            case IN_APP_PAY:
+                if (resultCode == InAppPayment.EXIT) {
 
                 }
                 break;
@@ -265,8 +273,8 @@ public class MainActivity extends AppCompatActivity {
                 slideInit();
                 break;
             case R.id.button_charge_send:
-                Intent payIntent = new Intent(MainActivity.this, CheckKakaoPay.class);
-                startActivityForResult(payIntent, CHECK_KAKAO_PAY);
+                Intent payIntent = new Intent(MainActivity.this, InAppPayment.class);
+                startActivityForResult(payIntent, IN_APP_PAY);
                 slideInit();
                 break;
             case R.id.button_logout:
@@ -302,7 +310,7 @@ public class MainActivity extends AppCompatActivity {
             isAccessFineLocation = true;
 
         } else if (requestCode == 1001
-                && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             isAccessCoarseLocation = true;
         }
 
@@ -342,11 +350,11 @@ public class MainActivity extends AppCompatActivity {
     public class RefreshTableTask extends AsyncTask<Void, Void, Void> {
 
         Location location = null;
-        int questStatus = 0;
+        int questState = 0;
 
-        public RefreshTableTask(Location gpsLocation, int questStatus) {
+        public RefreshTableTask(Location gpsLocation, int questState) {
             this.location = gpsLocation;
-            this.questStatus = questStatus;
+            this.questState = questState;
             this.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
 
@@ -357,8 +365,8 @@ public class MainActivity extends AppCompatActivity {
                 HttpURLConnection conn = this.setConnection("http://168.188.127.175:3000/tables");
                 jsonObject = new JSONObject();
                 jsonObject.put("uid", userID);
-                jsonObject.put("ordered", (this.location != null && questStatus == QuestQuery.UPLOADED));
-                jsonObject.put("status", this.questStatus);
+                jsonObject.put("ordered", (this.location != null && questState == QuestQuery.UPLOADED));
+                jsonObject.put("state", this.questState);
                 if (this.location != null) {
                     jsonObject.put("latitude", this.location.getLatitude());
                     jsonObject.put("longitude", this.location.getLongitude());
@@ -425,23 +433,26 @@ public class MainActivity extends AppCompatActivity {
             ArrayList<LinkedHashMap<String, Object>> jsonList = jsonArrayParser.parse();
             for (int i = 0; i < jsonList.size(); i++) {
                 HashMap<String, Object> tableEntry = jsonList.get(i);
-                QuestQuery questEntry = new QuestQuery((Long) tableEntry.get("quester"));
-                questEntry.setQuestIndex((Long) tableEntry.get("tid"));
-                if (tableEntry.get("questee") != null)
-                    questEntry.setAcceptor((Long) tableEntry.get("questee"));
-                questEntry.setQuestInfo((String) tableEntry.get("title")
-                        , (String) tableEntry.get("place")
-                        , String.valueOf(tableEntry.get("pay"))
-                        , (String) tableEntry.get("comment"));
-                Object latitude = tableEntry.get("latitude"), longitude = tableEntry.get("longitude");
+                QuestQuery questEntry = new QuestQuery((Long) tableEntry.get("Quester"));
+                questEntry.setState(questEntry.getQuester(), ((Long) tableEntry.get("QuesterState")).intValue());
+                if (tableEntry.get("Questee") != null) {
+                    questEntry.setQuestee((Long) tableEntry.get("Questee"));
+                    questEntry.setState(questEntry.getQuestee(), ((Long) tableEntry.get("QuesteeState")).intValue());
+                }
+                questEntry.setQuestIndex((Long) tableEntry.get("_id"));
+                questEntry.setQuestInfo((String) tableEntry.get("Title")
+                        , (String) tableEntry.get("PlaceName")
+                        , String.valueOf(tableEntry.get("Pay"))
+                        , (String) tableEntry.get("Comment"));
+                Object latitude = tableEntry.get("Latitude"), longitude = tableEntry.get("Longitude");
                 if (latitude instanceof Long) {
-                    latitude = ((Long)latitude).doubleValue();
+                    latitude = ((Long) latitude).doubleValue();
                 }
                 if (longitude instanceof Long) {
-                    longitude = ((Long)longitude).doubleValue();
+                    longitude = ((Long) longitude).doubleValue();
                 }
-                questEntry.setPosition(new double[] {(Double)latitude, (Double)longitude});
-                questEntry.setState(((Long) tableEntry.get("state")).intValue());
+                questEntry.setPosition(new double[]{(Double) latitude, (Double) longitude});
+
                 QuestEntryView newQuestEntryView = new QuestEntryView(getApplicationContext(), questEntry);
                 newQuestEntryView.setOnClickListener(new View.OnClickListener() {
                     @Override

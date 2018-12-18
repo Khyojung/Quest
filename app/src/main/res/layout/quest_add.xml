@@ -82,7 +82,6 @@
             </FrameLayout>
 
             <LinearLayout
-
                 android:padding="10dp"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -118,10 +117,12 @@
                     android:layout_weight="1"
                     android:orientation="vertical">
 
+
                     <EditText
                         android:id="@+id/text_point"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+
                         android:background="#00000000"
                         android:ems="10"
                         android:fontFamily="@font/work"
@@ -141,6 +142,7 @@
                     android:layout_weight="1"
                     android:orientation="vertical">
 
+
                     <EditText
                         android:id="@+id/textbox_add_reward"
                         android:layout_width="match_parent"
@@ -158,6 +160,7 @@
                         android:background="@drawable/gray_underbar" />
 
                 </LinearLayout>
+
 
 
             </LinearLayout>
@@ -183,10 +186,12 @@
                 android:text="의뢰 내용" />
 
             <EditText
+
                 android:background="@drawable/rac_gray_round"
                 android:id="@+id/textbox_add_comment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+
                 android:layout_weight="1"
                 android:ems="10"
                 android:gravity="top"

@@ -1,23 +1,20 @@
-package com.example.hyojung.quest.Activity;
+package com.hyojung.quest.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.hyojung.quest.Queries.QuestQuery;
+import com.hyojung.quest.Queries.QuestQuery;
 import com.example.hyojung.quest.R;
 
 import java.util.ArrayList;
 
-import static com.example.hyojung.quest.Activity.MainActivity.CHAT_TEST;
-
 public class ViewQuest extends AppCompatActivity {
 
-    final public static int QUEST_DESTROYED = 10, QUEST_REQUEST_CANCELED = 11, QUEST_ACCEPTED = 12,
+    final public static int QUEST_DESTROY = 10, QUEST_REQUEST_CANCELED = 11, QUEST_ACCEPTED = 12,
             QUEST_COMPLETED = 13, BACK_PRESSED = 14;
 
     long viewerId;
@@ -57,9 +54,9 @@ public class ViewQuest extends AppCompatActivity {
             @Override
             public void onClick(View v) {           // 거래 파기
                 Intent intent = new Intent();
-                viewingEntry.setCanceled();
+                viewingEntry.setState(viewerId, QuestQuery.DESTROY_AGREED);
                 intent.putExtra("resultUpdate", viewingEntry);
-                setResult(QUEST_DESTROYED, intent);
+                setResult(QUEST_DESTROY, intent);
                 finish();
             }
         });
@@ -68,7 +65,7 @@ public class ViewQuest extends AppCompatActivity {
             @Override
             public void onClick(View v) {           // 거래 완료
                 Intent intent = new Intent();
-                viewingEntry.setCompleted();
+                viewingEntry.setState(viewerId, QuestQuery.COMPLETE_AGREED);
                 intent.putExtra("resultUpdate", viewingEntry);
                 setResult(QUEST_COMPLETED, intent);
                 finish();
@@ -82,7 +79,7 @@ public class ViewQuest extends AppCompatActivity {
                 Intent chatIntent = new Intent(ViewQuest.this, ChatRoom.class);
                 chatIntent.putExtra("myId", viewerId);
                 chatIntent.putExtra("otherId", (long) 123123);
-                startActivityForResult(chatIntent, CHAT_TEST);
+                startActivityForResult(chatIntent, MainActivity.CHAT_TEST);
             }
         });
 
@@ -101,7 +98,7 @@ public class ViewQuest extends AppCompatActivity {
             @Override
             public void onClick(View v) {                  // 수락 버튼
                 Intent intent = new Intent();
-                viewingEntry.setAcceptor(viewerId);
+                viewingEntry.setQuestee(viewerId);
                 intent.putExtra("resultUpdate", viewingEntry);
                 setResult(QUEST_ACCEPTED, intent);
                 finish();
@@ -120,7 +117,7 @@ public class ViewQuest extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == CHAT_TEST && resultCode == ChatRoom.EXIT) {
+        if (requestCode == MainActivity.CHAT_TEST && resultCode == ChatRoom.EXIT) {
 
         }
     }
@@ -134,7 +131,7 @@ public class ViewQuest extends AppCompatActivity {
             chatroomButton.setEnabled(false);
             chatroomButton.setVisibility(Button.GONE);
         }
-        if (viewingEntry.getRequester() == viewerId) {          // 해당 거래를 해당 거래 요청자가 보는 경우 수락 버튼 숨기기
+        if (viewingEntry.getQuester() == viewerId) {          // 해당 거래를 해당 거래 요청자가 보는 경우 수락 버튼 숨기기
             acceptButton.setEnabled(false);
             acceptButton.setVisibility(Button.GONE);
             if (viewingEntry.getState() >= QuestQuery.ACCEPTED) {    // 수락되거나 완료된 거래이면 요청 취소버튼 숨기기

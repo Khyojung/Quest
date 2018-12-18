@@ -1,4 +1,4 @@
-package com.example.hyojung.quest;
+package com.hyojung.quest;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

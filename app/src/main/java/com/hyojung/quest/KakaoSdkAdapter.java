@@ -1,4 +1,4 @@
-package com.example.hyojung.quest;
+package com.hyojung.quest;
 
 import android.app.Activity;
 import android.content.Context;

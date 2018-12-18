@@ -6,19 +6,24 @@
     android:clickable="true"
     android:id="@+id/quest_drawer">
 
-    <ScrollView
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <LinearLayout
-            android:id="@+id/quest_main_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:clickable="true">
-        </LinearLayout>
-    </ScrollView>
+        android:layout_height="match_parent">
 
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/quest_main_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clickable="true"
+                android:gravity="center"
+                android:orientation="vertical"></LinearLayout>
+        </ScrollView>
+    </android.support.v4.widget.SwipeRefreshLayout>
     <include
         android:id="@+id/slide_menu"
         layout="@layout/slide_menu" />
