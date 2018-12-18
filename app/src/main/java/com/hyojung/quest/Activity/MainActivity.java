@@ -15,6 +15,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -362,6 +363,7 @@ public class MainActivity extends AppCompatActivity {
         protected Void doInBackground(Void... voids) {
             JSONObject jsonObject = null;
             try {
+                Log.d("RefreshTableTask", "entered");
                 HttpURLConnection conn = this.setConnection("http://168.188.127.175:3000/tables");
                 jsonObject = new JSONObject();
                 jsonObject.put("uid", userID);
