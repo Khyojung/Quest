@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
             finish();
         }
 
-        swipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.swipe_layout);
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_layout);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -176,8 +176,7 @@ public class MainActivity extends AppCompatActivity {
                 if (resultCode != ViewQuest.BACK_PRESSED) {
                     QuestQuery beUpdatedQuest = (QuestQuery) data.getSerializableExtra("resultUpdate");
                     new JSONSendTask(beUpdatedQuest, tableRefreshHandler);
-                }
-                else {
+                } else {
                     tableRefreshHandler.sendEmptyMessage(QuestQuery.UPLOADED);
                 }
                 break;
@@ -311,7 +310,7 @@ public class MainActivity extends AppCompatActivity {
             isAccessFineLocation = true;
 
         } else if (requestCode == 1001
-                && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             isAccessCoarseLocation = true;
         }
 
@@ -351,11 +350,11 @@ public class MainActivity extends AppCompatActivity {
     public class RefreshTableTask extends AsyncTask<Void, Void, Void> {
 
         Location location = null;
-        int questStatus = 0;
+        int questState = 0;
 
-        public RefreshTableTask(Location gpsLocation, int questStatus) {
+        public RefreshTableTask(Location gpsLocation, int questState) {
             this.location = gpsLocation;
-            this.questStatus = questStatus;
+            this.questState = questState;
             this.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
 
@@ -366,8 +365,8 @@ public class MainActivity extends AppCompatActivity {
                 HttpURLConnection conn = this.setConnection("http://168.188.127.175:3000/tables");
                 jsonObject = new JSONObject();
                 jsonObject.put("uid", userID);
-                jsonObject.put("ordered", (this.location != null && questStatus == QuestQuery.UPLOADED));
-                jsonObject.put("status", this.questStatus);
+                jsonObject.put("ordered", (this.location != null && questState == QuestQuery.UPLOADED));
+                jsonObject.put("state", this.questState);
                 if (this.location != null) {
                     jsonObject.put("latitude", this.location.getLatitude());
                     jsonObject.put("longitude", this.location.getLongitude());
@@ -434,25 +433,25 @@ public class MainActivity extends AppCompatActivity {
             ArrayList<LinkedHashMap<String, Object>> jsonList = jsonArrayParser.parse();
             for (int i = 0; i < jsonList.size(); i++) {
                 HashMap<String, Object> tableEntry = jsonList.get(i);
-                QuestQuery questEntry = new QuestQuery((Long) tableEntry.get("quester"));
-                questEntry.setState(questEntry.getQuester(), ((Long) tableEntry.get("quester_state")).intValue());
-                if (tableEntry.get("questee") != null) {
-                    questEntry.setQuestee((Long) tableEntry.get("questee"));
-                    questEntry.setState(questEntry.getQuestee(), ((Long) tableEntry.get("questee_state")).intValue());
+                QuestQuery questEntry = new QuestQuery((Long) tableEntry.get("Quester"));
+                questEntry.setState(questEntry.getQuester(), ((Long) tableEntry.get("QuesterState")).intValue());
+                if (tableEntry.get("Questee") != null) {
+                    questEntry.setQuestee((Long) tableEntry.get("Questee"));
+                    questEntry.setState(questEntry.getQuestee(), ((Long) tableEntry.get("QuesteeState")).intValue());
                 }
-                questEntry.setQuestIndex((Long) tableEntry.get("tid"));
-                questEntry.setQuestInfo((String) tableEntry.get("title")
-                        , (String) tableEntry.get("place")
-                        , String.valueOf(tableEntry.get("pay"))
-                        , (String) tableEntry.get("comment"));
-                Object latitude = tableEntry.get("latitude"), longitude = tableEntry.get("longitude");
+                questEntry.setQuestIndex((Long) tableEntry.get("_id"));
+                questEntry.setQuestInfo((String) tableEntry.get("Title")
+                        , (String) tableEntry.get("PlaceName")
+                        , String.valueOf(tableEntry.get("Pay"))
+                        , (String) tableEntry.get("Comment"));
+                Object latitude = tableEntry.get("Latitude"), longitude = tableEntry.get("Longitude");
                 if (latitude instanceof Long) {
-                    latitude = ((Long)latitude).doubleValue();
+                    latitude = ((Long) latitude).doubleValue();
                 }
                 if (longitude instanceof Long) {
-                    longitude = ((Long)longitude).doubleValue();
+                    longitude = ((Long) longitude).doubleValue();
                 }
-                questEntry.setPosition(new double[] {(Double)latitude, (Double)longitude});
+                questEntry.setPosition(new double[]{(Double) latitude, (Double) longitude});
 
                 QuestEntryView newQuestEntryView = new QuestEntryView(getApplicationContext(), questEntry);
                 newQuestEntryView.setOnClickListener(new View.OnClickListener() {
