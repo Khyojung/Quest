@@ -95,11 +95,11 @@ public class QuestQuery extends Query implements Serializable {
         return this.questIndex;
     }
 
-    public long getQuester() {
+    public Long getQuester() {
         return this.quester;
     }
 
-    public long getQuestee() {
+    public Long getQuestee() {
         return this.questee;
     }
 
