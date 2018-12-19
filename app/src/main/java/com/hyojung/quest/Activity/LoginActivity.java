@@ -12,6 +12,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.hyojung.quest.DEBUG.Debug;
+import com.hyojung.quest.DEBUG.KakaoKeyHash;
 import com.hyojung.quest.GlobalApplication;
 import com.hyojung.quest.Queries.LoginQuery;
 import com.hyojung.quest.JSON.JSONSendTask;
@@ -37,6 +39,8 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
+        Debug.makeToast(getApplicationContext(), KakaoKeyHash.getKeyHash(getApplicationContext()));
+        Log.d("KakaoKeyHash", KakaoKeyHash.getKeyHash(getApplicationContext()));
         GlobalApplication.setCurrentActivity(this);
         instance = this;
         callback = new SessionCallback();
@@ -95,22 +99,6 @@ public class LoginActivity extends AppCompatActivity {
 
         @Override
         public void onSessionOpenFailed(KakaoException exception) {
-        }
-    }
-
-    // 해시값 구하는 코드
-    public void getHashKey() {
-        try {
-            PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_SIGNATURES);
-            for (Signature signature : info.signatures) {
-                MessageDigest md;
-                md = MessageDigest.getInstance("SHA");
-                md.update(signature.toByteArray());
-                String something = new String(Base64.encode(md.digest(), 0));
-                Log.i("Hash key", something);
-            }
-        } catch (Exception e) {
-            Log.e("name not found", e.toString());
         }
     }
 }
