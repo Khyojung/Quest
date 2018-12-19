@@ -363,8 +363,8 @@ public class MainActivity extends AppCompatActivity {
         protected Void doInBackground(Void... voids) {
             JSONObject jsonObject = null;
             try {
-                Log.d("RefreshTableTask", "entered");
-                HttpURLConnection conn = this.setConnection("http://168.188.127.175:3000/tables");
+                HttpURLConnection conn = this.setConnection(JSONSendTask.urlString + "/tables");
+
                 jsonObject = new JSONObject();
                 jsonObject.put("uid", userID);
                 jsonObject.put("ordered", (this.location != null && questState == QuestQuery.UPLOADED));

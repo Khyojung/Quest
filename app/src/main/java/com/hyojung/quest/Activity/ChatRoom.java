@@ -80,11 +80,23 @@ public class ChatRoom extends AppCompatActivity {
                 myBalloon.setMyChat();
                 myBalloon.resize();
                 chatList.addView(myBalloon);
-                ChatBalloon otherBalloon = new ChatBalloon(getApplicationContext());
-                otherBalloon.addChatString("Hello World!");
-                otherBalloon = otherBalloon.inflate(getApplicationContext());
-                otherBalloon.resize();
-                chatList.addView(otherBalloon);
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            Thread.sleep((long)(Math.random() * 3000));
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        ChatBalloon otherBalloon = new ChatBalloon(getApplicationContext());
+                        otherBalloon.addChatString("Hello World!");
+                        otherBalloon = otherBalloon.inflate(getApplicationContext());
+                        otherBalloon.resize();
+                        chatList.addView(otherBalloon);
+                    }
+                });
+
 
                 chat_scroll.fullScroll(ScrollView.FOCUS_DOWN);
                 break;
