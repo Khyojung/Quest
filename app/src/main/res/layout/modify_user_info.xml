@@ -1,173 +1,330 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:layout_margin="20sp">
+    android:orientation="vertical">
 
-
-    <TextView
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="30sp"
-        android:text="개인 정보 수정"
-        android:layout_marginBottom="10sp"/>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="이름 설정"
-        android:textSize="15sp" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="카카오 이름 : "
-            android:textSize="20sp" />
-
-        <TextView
-            android:id="@+id/text_current_kakao_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="김연훈"
-            android:textSize="20sp" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="대체 닉네임 : "
-            android:textSize="20sp" />
-
-        <TextView
-            android:id="@+id/text_current_spare_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="김연훈"
-            android:textSize="20sp" />
-
-    </LinearLayout>
-
-    <Switch
-        android:id="@+id/switch_sparename"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="대체 닉네임 사용" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <EditText
-            android:id="@+id/textbox_edit_nickname"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:ems="10"
-            android:hint="대체 닉네임 설정"
-            android:inputType="textPersonName" />
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp">
 
         <Button
-            android:id="@+id/button_submit_name"
+            android:id="@+id/button_modify_info_exit"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/pre_color" />
+
+        <TextView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="닉네임 변경" />
-    </LinearLayout>
+            android:layout_height="50dp"
+            android:fontFamily="@font/work"
+            android:paddingTop="5dp"
+            android:text="개인 정보 수정"
+            android:textColor="@color/simple"
+            android:textSize="30dp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10sp"
-        android:text="프로필 사진 설정"
-        android:textSize="15sp" />
-
-    <Switch
-        android:id="@+id/switch_spareimage"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="대체 프로필 사용" />
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:padding="10dp"
+            android:src="@drawable/star"
+            app:layout_constraintEnd_toEndOf="parent" />
+    </android.support.constraint.ConstraintLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:gravity="center"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
         <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="horizontal">
+            android:layout_height="0dp"
+            android:layout_weight="1.2">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                android:layout_gravity="center"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="카카오 프로필 사진" />
+                android:orientation="horizontal">
 
-                <ImageView
-                    android:id="@+id/image_kakao_profile"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
-                    tools:srcCompat="@tools:sample/avatars" />
+                    android:orientation="horizontal">
+
+                    <android.support.constraint.ConstraintLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1">
+
+                        <ImageView
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:background="@drawable/profile_kakao"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </android.support.constraint.ConstraintLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/work"
+                                android:text="KAKAO NAME"
+                                android:textSize="20sp" />
+
+                            <TextView
+                                android:id="@+id/text_current_kakao_name"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/work"
+                                android:text="김연훈"
+                                android:textSize="20sp" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <android.support.constraint.ConstraintLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1">
+
+                        <ImageView
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:background="@drawable/profile_name"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </android.support.constraint.ConstraintLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+
+                        android:layout_weight="2"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/work"
+                                android:text="QUEST NAME"
+                                android:textSize="20sp" />
+
+                            <TextView
+                                android:id="@+id/text_current_spare_name"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/work"
+                                android:text="김연훈"
+                                android:textSize="20sp" />
+
+                        </LinearLayout>
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="대체 프로필 사진" />
-
-                <ImageView
-                    android:id="@+id/image_spare_profile"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    tools:srcCompat="@tools:sample/avatars" />
-            </LinearLayout>
 
         </LinearLayout>
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:background="@drawable/underbar"/>
 
-        <Button
-            android:id="@+id/button_select_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="대체 프로필 사진 변경" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_margin="15dp"
+            android:layout_weight="6"
+            android:orientation="vertical">
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="NICK NAME 변경"
+                android:textSize="15sp" />
+
+
+            <Switch
+                android:id="@+id/switch_sparename"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="QUEST NAME 사용" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <android.support.constraint.ConstraintLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="4">
+
+                    <EditText
+                        android:id="@+id/textbox_edit_nickname"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:background="#00000000"
+                        android:ems="10"
+                        android:fontFamily="@font/work"
+                        android:hint="대체 닉네임 설정"
+                        android:inputType="textPersonName"
+                        app:layout_constraintBottom_toTopOf="@+id/imageView6" />
+
+                    <ImageView
+                        android:id="@+id/imageView6"
+                        android:layout_width="match_parent"
+                        android:layout_height="20dp"
+                        android:layout_marginBottom="8dp"
+                        android:background="@drawable/gray_underbar"
+                        app:layout_constraintBottom_toBottomOf="parent" />
+
+                </android.support.constraint.ConstraintLayout>
+
+
+                <Button
+                    android:id="@+id/button_submit_name"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/red_tool"
+                    android:fontFamily="@font/work"
+                    android:text="수정" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10sp"
+                android:text="프로필 사진 설정"
+                android:textSize="15sp" />
+
+            <Switch
+                android:id="@+id/switch_spareimage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="대체 프로필 사용" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/work"
+                            android:gravity="center"
+                            android:text="카카오 프로필 사진" />
+
+                        <ImageView
+                            android:id="@+id/image_kakao_profile"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="2dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/round_tool"
+                            android:padding="5dp"
+                            tools:srcCompat="@tools:sample/avatars" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/work"
+                            android:gravity="center"
+                            android:text="대체 프로필 사진" />
+
+                        <ImageView
+                            android:id="@+id/image_spare_profile"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="2dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/round_tool"
+                            android:padding="5dp"
+                            tools:srcCompat="@tools:sample/avatars" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/button_select_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@drawable/red_tool"
+                    android:fontFamily="@font/work"
+                    android:text="대체 프로필 사진 변경" />
+
+            </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
 
-    <Button
-        android:id="@+id/button_modify_info_exit"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="뒤로가기" />
 
 </LinearLayout>

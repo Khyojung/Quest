@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:background="#AACCFF"
+        android:background="@drawable/background"
         android:fillViewport="true">
 
         <LinearLayout
@@ -30,18 +30,23 @@
 
         <EditText
             android:id="@+id/textbox_input_chat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="4"
             android:ems="10"
             android:inputType="textPersonName" />
 
         <Button
+            android:layout_margin="10dp"
             android:id="@+id/button_chat_send"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
             android:layout_weight="1"
-            android:text="전송"
+            android:fontFamily="@font/work"
+            android:textSize="20dp"
+            android:textColor="#383838"
+            android:text="SEND"
+            android:background="@drawable/button_full"
             android:onClick="onClick"/>
         </LinearLayout>
 

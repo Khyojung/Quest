@@ -9,5 +9,8 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+    <style name="button">
+        <item name="android:shape">rectangle</item>
+    </style>
 
 </resources>
