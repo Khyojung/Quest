@@ -27,7 +27,7 @@ import java.util.ArrayList;
 public class JSONSendTask extends AsyncTask<Void, Void, Void> {
 
     Query query;
-    String urlString = "http://168.188.127.175:3000";
+    String urlString = "http://oreh.onyah.net:3000";
     Handler handler = null;
     String resultJsonString;
 
