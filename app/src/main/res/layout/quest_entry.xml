@@ -47,7 +47,7 @@
                 android:layout_width="80sp"
                 android:layout_height="wrap_content"
                 android:duplicateParentState="true"
-                android:fontFamily="@font/font"
+                android:fontFamily="@font/work"
                 android:text="위치 : "
                 android:textSize="20sp" />
 
@@ -73,7 +73,7 @@
                 android:layout_height="wrap_content"
                 android:duplicateParentState="true"
                 android:text="사례금 : "
-                android:fontFamily="@font/font"
+                android:fontFamily="@font/work"
                 android:textSize="20sp" />
 
             <TextView
